@@ -80,28 +80,16 @@ FutSim is a Ruby on Rails 8 application for simulating football (soccer) matches
 - ✅ Database setup and migrations
 - ✅ Responsive web interface
 
-### Testing the Authentication Flow
-
-1. **First User Invitation**:
-   ```bash
-   # In Rails console
-   user = User.invite!('udo.schmidt.jr@gmail.com')
-   ```
-
-2. **User Authentication**:
-   - Navigate to http://localhost:3000
-   - Click "Sign in with Google"
-   - Authenticate with Google account
-   - Access granted for invited users
-
-3. **Inviting New Users**:
-   - Sign in as administrator
-   - Navigate to /invitations
-   - Enter email address and send invitation
-   - Invited user can then authenticate
+### Security Issues Identified
+- **Critical**: Invitations system accessible without authentication
+- **Impact**: Unauthorized users can potentially invite others to the system
+- **Fix Required**: Add authentication checks to all protected routes
+- **Documentation**: See SECURITY_FIXES.md for detailed implementation plan
 
 ### Current Project Status
 The authentication system is fully functional with OAuth integration and invitation-based access control. Users can be invited through the administrative interface, and invited users can authenticate with Google OAuth.
+
+**IMPORTANT**: A critical security issue has been identified where the invitations system is accessible without authentication. This must be fixed before the application can be considered production-ready.
 
 ### Next Development Phases
 1. Team management (create, edit, delete teams)
