@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:17.6
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: futsim_development
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: bash -c "rm -f tmp/pids/server.pid && bundle check || bundle install && bin/dev"
+    volumes:
+      - ./app:/rails/app
+      - ./config:/rails/config
+      - ./db:/rails/db
+      - ./lib:/rails/lib
+      - ./public:/rails/public
+      - ./test:/rails/test
+      - ./spec:/rails/spec
+      - ./Gemfile:/rails/Gemfile
+      - ./Gemfile.lock:/rails/Gemfile.lock
+      - bundle_cache:/usr/local/bundle
+      - ./.env:/rails/.env
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/futsim_development
+      REDIS_URL: redis://redis:6379/0
+      RAILS_ENV: development
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    tty: true
+    stdin_open: true
+    user: "1000:1000"
+
+volumes:
+  postgres_data:
+  redis_data:
+  bundle_cache:
