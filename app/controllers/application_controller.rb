@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   before_action :set_current_user
+  before_action :set_locale
 
   private
 
@@ -17,5 +18,14 @@ class ApplicationController < ActionController::Base
 
   def authenticate_user!
     redirect_to root_path, alert: 'Please sign in to access this page.' unless user_signed_in?
+  end
+
+  def set_locale
+    I18n.locale = params[:locale] || session[:locale] || I18n.default_locale
+    session[:locale] = I18n.locale
+  end
+
+  def default_url_options
+    { locale: I18n.locale }
   end
 end

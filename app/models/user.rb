@@ -1,4 +1,7 @@
 class User < ApplicationRecord
+  has_many :rooms, dependent: :destroy
+  has_many :clubs, dependent: :destroy
+
   validates :email, presence: true, uniqueness: true
   validates :provider, presence: true, if: :persisted?
   validates :uid, presence: true, if: :persisted?

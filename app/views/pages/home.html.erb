@@ -17,13 +17,32 @@
       </div>
     </div>
 
+    <!-- Quick Actions -->
+    <div class="bg-white rounded-xl shadow-sm p-4 mb-6">
+      <h3 class="text-lg font-semibold text-gray-900 mb-3">⚡ <%= t('dashboard.quick_actions') %></h3>
+      <div class="flex flex-wrap gap-3">
+        <%= link_to new_room_path(type: 'single'), class: "flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-all" do %>
+          <span>👤</span>
+          <%= t('dashboard.new_single_room') %>
+        <% end %>
+        <%= link_to new_room_path(type: 'multi'), class: "flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-all" do %>
+          <span>👥</span>
+          <%= t('dashboard.new_multi_room') %>
+        <% end %>
+        <%= link_to rooms_path, class: "flex items-center gap-2 px-4 py-2 bg-purple-50 text-purple-700 rounded-lg hover:bg-purple-100 transition-all" do %>
+          <span>🏠</span>
+          <%= t('dashboard.all_rooms') %>
+        <% end %>
+      </div>
+    </div>
+
     <div class="grid md:grid-cols-2 gap-6">
       <!-- Partidas Singleplayer -->
       <div class="bg-white rounded-xl shadow-sm p-6">
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-xl font-semibold flex items-center gap-2">
             <span>👤</span>
-            Partidas Singleplayer
+            <%= t('dashboard.singleplayer_matches') %>
           </h2>
           <span class="px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-700">4/4</span>
         </div>
@@ -80,9 +99,9 @@
         </div>
 
         <!-- New Game Button -->
-        <button class="w-full mt-4 px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-green-500 hover:text-green-600 transition-all duration-200">
-          + Novo Jogo Solo
-        </button>
+        <%= link_to new_room_path(type: 'single'), class: "w-full mt-4 px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-green-500 hover:text-green-600 transition-all duration-200 block text-center" do %>
+          + <%= t('dashboard.new_solo_game') %>
+        <% end %>
       </div>
 
       <!-- Salas Multiplayer -->
@@ -90,9 +109,12 @@
         <div class="flex items-center justify-between mb-6">
           <h2 class="text-xl font-semibold flex items-center gap-2">
             <span>👥</span>
-            Salas Multiplayer
+            <%= t('dashboard.multiplayer_rooms') %>
           </h2>
-          <span class="px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-700">1/2</span>
+          <div class="flex items-center gap-2">
+            <%= link_to t('dashboard.all_rooms'), rooms_path, class: "text-sm text-blue-600 hover:text-blue-800" %>
+            <span class="px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-700">1/2</span>
+          </div>
         </div>
 
         <!-- Room Card -->
@@ -113,21 +135,21 @@
         </div>
 
         <!-- Create Room Button -->
-        <button class="w-full mt-4 px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-green-500 hover:text-green-600 transition-all duration-200">
-          + Criar Nova Sala
-        </button>
+        <%= link_to new_room_path(type: 'multi'), class: "w-full mt-4 px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-green-500 hover:text-green-600 transition-all duration-200 block text-center" do %>
+          + <%= t('dashboard.create_new_room') %>
+        <% end %>
 
         <!-- Stats Card -->
         <div class="mt-6 p-4 rounded-lg" style="background-color: #f8fafc;">
-          <h3 class="font-semibold text-gray-900 mb-2">📊 Suas Estatísticas</h3>
+          <h3 class="font-semibold text-gray-900 mb-2">📊 <%= t('dashboard.your_stats') %></h3>
           <div class="grid grid-cols-2 gap-4">
             <div class="text-center">
               <div class="text-2xl font-bold" style="color: #228B22;">23</div>
-              <div class="text-xs text-gray-600">Vitórias</div>
+              <div class="text-xs text-gray-600"><%= t('dashboard.wins') %></div>
             </div>
             <div class="text-center">
               <div class="text-2xl font-bold text-red-600">8</div>
-              <div class="text-xs text-gray-600">Derrotas</div>
+              <div class="text-xs text-gray-600"><%= t('dashboard.losses') %></div>
             </div>
           </div>
         </div>

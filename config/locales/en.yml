@@ -1,31 +1,58 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
-  hello: "Hello world"
+  common:
+    actions: "Actions"
+    back: "Back"
+    cancel: "Cancel"
+    create: "Create"
+    edit: "Edit"
+    update: "Update"
+    save: "Save"
+    delete: "Delete"
+    view: "View"
+    continue: "Continue"
+
+  nav:
+    home: "Home"
+    rooms: "Rooms"
+    profile: "Profile"
+    logout: "Logout"
+
+  dashboard:
+    welcome: "Welcome"
+    quick_actions: "Quick Actions"
+    new_single_room: "New Solo Room"
+    new_multi_room: "New Multi Room"
+    all_rooms: "All Rooms"
+    singleplayer_matches: "Singleplayer Matches"
+    multiplayer_rooms: "Multiplayer Rooms"
+    your_stats: "Your Statistics"
+    wins: "Wins"
+    losses: "Losses"
+    new_solo_game: "New Solo Game"
+    create_new_room: "Create New Room"
+
+  rooms:
+    title: "Rooms"
+    new: "New Room"
+    create: "Create Room"
+    name: "Room Name"
+    description: "Description"
+    new_singleplayer: "New Singleplayer Room"
+    new_multiplayer: "New Multiplayer Room"
+    description_optional: "Description (optional)"
+    max_players_label: "Maximum Number of Players"
+    max_players_help: "Multiplayer rooms can have 4 to 16 players"
+    singleplayer_info: "Singleplayer Room"
+    multiplayer_info: "Multiplayer Room"
+
+  divisions:
+    serie_a: "Serie A"
+    serie_b: "Serie B"
+    serie_c: "Serie C"
+    serie_d: "Serie D"
+    estadual: "State Championship"
+
+  notices:
+    room_created: "Room created successfully!"
+    room_updated: "Room updated successfully!"
+    room_deleted: "Room deleted successfully!"

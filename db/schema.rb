@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_16_165720) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_16_202620) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -37,6 +37,29 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_16_165720) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "lineup_players", force: :cascade do |t|
+    t.bigint "lineup_id", null: false
+    t.bigint "player_id", null: false
+    t.string "position"
+    t.boolean "starting"
+    t.integer "substitution_minute"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["lineup_id"], name: "index_lineup_players_on_lineup_id"
+    t.index ["player_id"], name: "index_lineup_players_on_player_id"
+  end
+
+  create_table "lineups", force: :cascade do |t|
+    t.string "name"
+    t.string "formation"
+    t.bigint "club_id", null: false
+    t.date "match_date"
+    t.boolean "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["club_id"], name: "index_lineups_on_club_id"
   end
 
   create_table "players", force: :cascade do |t|
@@ -102,6 +125,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_16_165720) do
   add_foreign_key "clubs", "divisions"
   add_foreign_key "clubs", "rooms"
   add_foreign_key "clubs", "users"
+  add_foreign_key "lineup_players", "lineups"
+  add_foreign_key "lineup_players", "players"
+  add_foreign_key "lineups", "clubs"
   add_foreign_key "players", "clubs"
   add_foreign_key "rooms", "users"
   add_foreign_key "seasons", "divisions"

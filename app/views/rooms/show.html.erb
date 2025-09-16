@@ -1,0 +1,143 @@
+<div class="max-w-6xl mx-auto px-4 py-8">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <%= link_to "← Voltar às Salas", rooms_path, class: "text-gray-600 hover:text-gray-800 font-medium mb-2 inline-block" %>
+      <h1 class="text-3xl font-bold text-gray-900 flex items-center gap-3">
+        <span><%= @room.singleplayer? ? '👤' : '👥' %></span>
+        <%= @room.name %>
+      </h1>
+      <p class="text-gray-600">
+        <%= @room.singleplayer? ? 'Sala Singleplayer' : 'Sala Multiplayer' %> •
+        Status: <%= @room.status.humanize %>
+      </p>
+    </div>
+
+    <div class="flex gap-3">
+      <% if @room.user == current_user %>
+        <%= link_to "Editar", edit_room_path(@room), class: "px-4 py-2 text-gray-600 rounded-lg font-medium border border-gray-300 hover:bg-gray-50 transition-all" %>
+        <%= link_to "Excluir", @room, method: :delete,
+            data: { confirm: "Tem certeza que deseja excluir esta sala?" },
+            class: "px-4 py-2 text-red-600 rounded-lg font-medium border border-red-300 hover:bg-red-50 transition-all" %>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Room Info Card -->
+  <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+    <div class="grid md:grid-cols-3 gap-6">
+      <!-- Basic Info -->
+      <div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-3">Informações da Sala</h3>
+        <div class="space-y-2">
+          <div>
+            <span class="text-sm text-gray-600">Criada por:</span>
+            <p class="font-medium"><%= @room.user.name %></p>
+          </div>
+
+          <div>
+            <span class="text-sm text-gray-600">Tipo:</span>
+            <p class="font-medium">
+              <%= @room.singleplayer? ? 'Singleplayer' : 'Multiplayer' %>
+            </p>
+          </div>
+
+          <div>
+            <span class="text-sm text-gray-600">Status:</span>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+              <%= case @room.status
+                  when 'waiting' then 'bg-yellow-100 text-yellow-800'
+                  when 'active' then 'bg-green-100 text-green-800'
+                  when 'finished' then 'bg-gray-100 text-gray-800'
+                  else 'bg-gray-100 text-gray-800'
+                  end %>">
+              <%= @room.status.humanize %>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Players Info -->
+      <div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-3">Jogadores</h3>
+        <div class="space-y-2">
+          <div>
+            <span class="text-sm text-gray-600">Atual:</span>
+            <p class="font-medium"><%= @room.current_players %></p>
+          </div>
+
+          <div>
+            <span class="text-sm text-gray-600">Máximo:</span>
+            <p class="font-medium"><%= @room.max_players %></p>
+          </div>
+
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-blue-600 h-2 rounded-full"
+                 style="width: <%= (@room.current_players.to_f / @room.max_players * 100).round(1) %>%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div>
+        <h3 class="text-lg font-semibold text-gray-900 mb-3">Descrição</h3>
+        <% if @room.description.present? %>
+          <p class="text-gray-600"><%= @room.description %></p>
+        <% else %>
+          <p class="text-gray-400 italic">Nenhuma descrição fornecida</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clubs Section -->
+  <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-semibold text-gray-900">Clubes na Sala</h3>
+      <% if @clubs.any? %>
+        <span class="text-sm text-gray-600"><%= @clubs.count %> clube(s)</span>
+      <% end %>
+    </div>
+
+    <% if @clubs.any? %>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <% @clubs.each do |club| %>
+          <div class="border border-gray-200 rounded-lg p-4">
+            <div class="flex items-center justify-between mb-2">
+              <h4 class="font-medium text-gray-900"><%= club.name %></h4>
+              <span class="text-xs text-gray-500"><%= club.division.name if club.division %></span>
+            </div>
+            <p class="text-sm text-gray-600 mb-2"><%= club.city %></p>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Overall: <span class="font-medium"><%= club.average_overall %></span></span>
+              <span class="text-gray-600">Jogadores: <span class="font-medium"><%= club.squad_size %></span></span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="text-center py-8">
+        <p class="text-gray-500">Nenhum clube criado ainda nesta sala.</p>
+        <button class="mt-4 px-4 py-2 rounded-lg font-medium text-white hover:opacity-90 transition-all"
+                style="background-color: #228B22;">
+          + Criar Primeiro Clube
+        </button>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Quick Actions -->
+  <% if @room.status == 'waiting' && @room.user == current_user %>
+    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="font-medium text-blue-900">Pronto para começar?</h3>
+          <p class="text-sm text-blue-700">Sua sala está configurada e pronta para o jogo.</p>
+        </div>
+        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-all">
+          Iniciar Jogo
+        </button>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -4,6 +4,7 @@ class Club < ApplicationRecord
   belongs_to :user
   belongs_to :room  # Sempre pertence a uma sala (single ou multiplayer)
   has_many :players, dependent: :destroy
+  has_many :lineups, dependent: :destroy
 
   # Validations
   validates :name, presence: true

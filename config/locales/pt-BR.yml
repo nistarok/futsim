@@ -1,0 +1,212 @@
+pt-BR:
+  # Common
+  common:
+    actions: "Ações"
+    back: "Voltar"
+    cancel: "Cancelar"
+    create: "Criar"
+    edit: "Editar"
+    update: "Atualizar"
+    save: "Salvar"
+    delete: "Remover"
+    view: "Ver"
+    continue: "Continuar"
+    loading: "Carregando..."
+    confirm: "Tem certeza?"
+    yes: "Sim"
+    no: "Não"
+
+  # Navigation
+  nav:
+    home: "Início"
+    rooms: "Salas"
+    profile: "Perfil"
+    logout: "Sair"
+    dashboard: "Dashboard"
+
+  # Dashboard
+  dashboard:
+    welcome: "Bem-vindo"
+    quick_actions: "Ações Rápidas"
+    new_single_room: "Nova Sala Solo"
+    new_multi_room: "Nova Sala Multi"
+    all_rooms: "Todas as Salas"
+    singleplayer_matches: "Partidas Singleplayer"
+    multiplayer_rooms: "Salas Multiplayer"
+    your_stats: "Suas Estatísticas"
+    wins: "Vitórias"
+    losses: "Derrotas"
+    new_solo_game: "Novo Jogo Solo"
+    create_new_room: "Criar Nova Sala"
+
+  # Rooms
+  rooms:
+    title: "Salas"
+    new: "Nova Sala"
+    create: "Criar Sala"
+    edit: "Editar Sala"
+    show: "Ver Sala"
+    name: "Nome da Sala"
+    description: "Descrição"
+    type: "Tipo"
+    max_players: "Máximo de Jogadores"
+    current_players: "Jogadores Atuais"
+    status: "Status"
+    created_at: "Criada em"
+    singleplayer: "Singleplayer"
+    multiplayer: "Multiplayer"
+    new_singleplayer: "Nova Sala Singleplayer"
+    new_multiplayer: "Nova Sala Multiplayer"
+    description_optional: "Descrição (opcional)"
+    max_players_label: "Número Máximo de Jogadores"
+    max_players_help: "Salas multiplayer podem ter de 4 a 16 jogadores"
+    singleplayer_info: "Sala Singleplayer"
+    multiplayer_info: "Sala Multiplayer"
+    singleplayer_features:
+      - "Jogue sozinho contra a IA"
+      - "Limite de 5 salas singleplayer por usuário"
+      - "Controle total sobre o ritmo do jogo"
+    multiplayer_features:
+      - "Jogue com até 16 amigos"
+      - "Sistema de aprovação coletiva para avançar rodadas"
+      - "Chat em tempo real entre membros"
+    placeholders:
+      single_name: "Ex: Minha Carreira no Santos"
+      multi_name: "Ex: Liga dos Amigos 2024"
+      description: "Descreva sua sala..."
+    status_values:
+      waiting: "Aguardando"
+      active: "Ativa"
+      paused: "Pausada"
+      finished: "Finalizada"
+
+  # Clubs
+  clubs:
+    title: "Clubes"
+    name: "Nome"
+    city: "Cidade"
+    division: "Divisão"
+    stadium_name: "Estádio"
+    stadium_capacity: "Capacidade"
+    founded_year: "Ano de Fundação"
+    budget: "Orçamento"
+    squad_size: "Elenco"
+    average_overall: "Overall Médio"
+    team_strength: "Força do Time"
+
+  # Lineups
+  lineups:
+    title: "Escalações"
+    new: "Nova Escalação"
+    create: "Criar Escalação"
+    edit: "Editar Escalação"
+    show: "Ver Escalação"
+    name: "Nome da Escalação"
+    formation: "Formação"
+    match_date: "Data do Jogo"
+    active: "Escalação Ativa"
+    starting_players: "Titulares"
+    substitute_players: "Reservas"
+    available_players: "Jogadores Disponíveis"
+    basic_info: "Informações Básicas"
+    formation_name: "Nome da Escalação"
+    formation_placeholder: "Ex: Formação Principal"
+    select_formation: "Selecione a formação"
+    note_title: "Nota Importante"
+    note_text: "Após criar a escalação, você poderá adicionar jogadores e definir suas posições específicas na tela de edição."
+    no_lineups: "Nenhuma escalação criada"
+    no_lineups_text: "Comece criando sua primeira escalação para organizar seu time."
+    create_first: "Criar Primeira Escalação"
+    manage_lineups: "Gerencie as escalações do seu time"
+    football_field: "Campo de Futebol"
+    information: "Informações"
+    match_date_label: "Data do Jogo"
+    team_strength_label: "Força do Time"
+    goalkeeper: "Goleiro"
+    no_goalkeeper: "Nenhum goleiro definido"
+    no_starting_players: "Nenhum jogador titular definido."
+    no_substitute_players: "Nenhum jogador reserva definido."
+    formations:
+      "4-4-2": "4-4-2"
+      "4-3-3": "4-3-3"
+      "3-5-2": "3-5-2"
+      "4-5-1": "4-5-1"
+      "3-4-3": "3-4-3"
+      "5-3-2": "5-3-2"
+      "4-2-3-1": "4-2-3-1"
+
+  # Players
+  players:
+    positions:
+      GK: "Goleiro"
+      CB: "Zagueiro Central"
+      LB: "Lateral Esquerdo"
+      RB: "Lateral Direito"
+      CDM: "Volante"
+      CM: "Meio-Campo"
+      CAM: "Meia Ofensivo"
+      LM: "Meia Esquerda"
+      RM: "Meia Direita"
+      LW: "Ponta Esquerda"
+      RW: "Ponta Direita"
+      ST: "Atacante"
+
+  # Divisions
+  divisions:
+    serie_a: "Série A"
+    serie_b: "Série B"
+    serie_c: "Série C"
+    serie_d: "Série D"
+    estadual: "Estadual"
+    descriptions:
+      serie_a: "Primeira divisão do futebol brasileiro"
+      serie_b: "Segunda divisão do futebol brasileiro"
+      serie_c: "Terceira divisão do futebol brasileiro"
+      serie_d: "Quarta divisão do futebol brasileiro"
+      estadual: "Campeonatos estaduais"
+
+  # Validations and errors
+  errors:
+    messages:
+      required: "é obrigatório"
+      blank: "não pode ficar em branco"
+      invalid: "é inválido"
+      too_short: "é muito curto"
+      too_long: "é muito longo"
+      taken: "já está em uso"
+      not_a_number: "não é um número"
+      greater_than: "deve ser maior que %{count}"
+      greater_than_or_equal_to: "deve ser maior ou igual a %{count}"
+      less_than: "deve ser menor que %{count}"
+      less_than_or_equal_to: "deve ser menor ou igual a %{count}"
+    lineup_must_have_11_starting_players: "Escalação deve ter exatamente 11 jogadores titulares (atual: %{count})"
+    lineup_must_have_one_goalkeeper: "Escalação deve ter exatamente 1 goleiro titular"
+    invalid_position: "deve ser uma posição válida"
+    invalid_formation: "deve ser uma formação válida"
+    player_already_in_lineup: "já está escalado nesta formação"
+    club_name_taken_in_room: "já existe nesta sala"
+
+  # Success messages
+  notices:
+    room_created: "Sala criada com sucesso!"
+    room_updated: "Sala atualizada com sucesso!"
+    room_deleted: "Sala removida com sucesso!"
+    lineup_created: "Escalação criada com sucesso!"
+    lineup_updated: "Escalação atualizada com sucesso!"
+    lineup_deleted: "Escalação removida com sucesso!"
+
+  # Time and date formats
+  time:
+    formats:
+      default: "%d/%m/%Y"
+      short: "%d/%m"
+      long: "%d de %B de %Y"
+
+  # Numbers
+  number:
+    currency:
+      format:
+        unit: "R$ "
+        delimiter: "."
+        separator: ","
+        precision: 2
