@@ -46,6 +46,10 @@ class User < ApplicationRecord
   def invited?
     invitation_token.present?
   end
+
+  def active?
+    !invited?
+  end
   
   def invitation_expired?
     invitation_created_at.present? && invitation_created_at < 24.hours.ago

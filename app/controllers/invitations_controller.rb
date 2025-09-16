@@ -1,5 +1,5 @@
 class InvitationsController < ApplicationController
-  before_action :require_admin
+  before_action :authenticate_user!
   
   def index
     @invited_users = User.invited.order(:created_at)
@@ -23,10 +23,9 @@ class InvitationsController < ApplicationController
   end
   
   private
-  
+
   def require_admin
-    # In a real application, you would check if the current user is an admin
-    # For now, we'll just allow access to everyone
+    # Future: Add admin role check when admin system is implemented
     # redirect_to root_path, alert: 'Access denied' unless current_user&.admin?
   end
 end
