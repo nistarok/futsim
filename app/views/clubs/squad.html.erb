@@ -22,8 +22,8 @@
 
     <!-- Navegação -->
     <div class="flex gap-3">
-      <%= link_to "⚽ Elenco", squad_club_path(@club), class: "px-6 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-all" %>
-      <%= link_to "📋 Escalação", lineup_club_path(@club), class: "px-6 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-all" %>
+      <%= link_to "#{football_icon} Elenco".html_safe, squad_club_path(@club), class: "px-6 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-all" %>
+      <%= link_to "#{save_icon} Escalação".html_safe, lineup_club_path(@club), class: "px-6 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-all" %>
       <%= link_to "← Voltar", @club, class: "px-6 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-all" %>
     </div>
   </div>
@@ -61,7 +61,7 @@
       'GK' => '🥅',
       'Defense' => '🛡️',
       'Midfield' => '⚙️',
-      'Attack' => '⚽'
+      'Attack' => football_icon
     }
   %>
 
@@ -70,7 +70,7 @@
       <div class="px-6 py-4 border-b border-gray-100">
         <div class="flex items-center gap-3">
           <div class="w-8 h-8 rounded-lg <%= position_colors[category] || 'bg-gray-500' %> flex items-center justify-center">
-            <span class="text-white text-lg"><%= position_icons[category] || '⚽' %></span>
+            <span class="text-white text-lg"><%= position_icons[category] || football_icon %></span>
           </div>
           <div>
             <h2 class="text-xl font-bold text-gray-900">
@@ -148,7 +148,7 @@
   <!-- Dica no final -->
   <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 text-center">
     <div class="flex items-center justify-center gap-2 mb-2">
-      <span class="text-2xl">💡</span>
+      <span class="text-2xl"><%= lightbulb_icon %></span>
       <h3 class="text-lg font-semibold text-blue-900">Dica</h3>
     </div>
     <p class="text-sm text-blue-700">

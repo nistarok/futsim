@@ -4,10 +4,10 @@
     <div class="bg-white shadow-sm p-6 mb-6" style="border-radius: 12px;">
       <div style="display: flex; align-items: center; justify-content: space-between;">
         <div>
-          <%= link_to "← #{t('rooms.back_to_dashboard')}", root_path, class: "text-gray-600 hover:text-gray-800 font-medium mb-3 inline-block", style: "color: #6b7280; text-decoration: none; font-weight: 500; margin-bottom: 0.75rem; display: inline-block;" %>
+          <%= link_to "#{arrow_left_icon} #{t('rooms.back_to_dashboard')}".html_safe, root_path, class: "text-gray-600 hover:text-gray-800 font-medium mb-3 inline-block", style: "color: #6b7280; text-decoration: none; font-weight: 500; margin-bottom: 0.75rem; display: inline-block;" %>
           <div style="display: flex; align-items: center; gap: 1rem;">
             <div style="width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(to right, #7c3aed, #8b5cf6); display: flex; align-items: center; justify-content: center;">
-              <span style="font-size: 1.5rem; font-weight: 700; color: white;">👤</span>
+              <span style="font-size: 1.5rem; font-weight: 700; color: white;"><%= user_icon %></span>
             </div>
             <div>
               <h1 style="font-size: 1.875rem; font-weight: 700; color: #111827;"><%= @room.name %></h1>
@@ -37,7 +37,7 @@
       <!-- Table Header -->
       <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 1rem; padding: 1rem; background: #f9fafb; border-radius: 8px; margin-bottom: 1rem; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb;">
         <div><%= t('clubs.name') || 'Time' %></div>
-        <div class="text-center" style="text-align: center;"><%= t('clubs.overall_average') || 'Média' %> ⭐</div>
+        <div class="text-center" style="text-align: center;"><%= t('clubs.overall_average') || 'Média' %> <%= trophy_icon %></div>
         <div class="text-center" style="text-align: center;"><%= t('clubs.budget_label') || 'Orçamento' %></div>
         <div class="text-center" style="text-align: center;"><%= t('clubs.stadium_label') || 'Estádio' %></div>
         <div class="text-center" style="text-align: center;"><%= t('common.actions') || 'Ação' %></div>
@@ -53,7 +53,7 @@
           %>
 
           <div class="team-row <%= club.available? ? '' : 'opacity-75' %>"
-               style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 1rem; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 0.5rem; align-items: center; cursor: pointer; transition: all 0.2s; <%= club.available? ? '' : 'opacity: 0.75;' %>"
+               style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 1rem; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 0.5rem; align-items: center; cursor: pointer; transition: all 0.2s; <%= club.available? ? '' : 'opacity: 0.75;' %>; background: linear-gradient(135deg, <%= club_primary_color(club) %>10 0%, <%= club_primary_color(club) %>05 100%);"
                onmouseover="this.style.borderColor='<%= club_primary_color(club) %>'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.1)'"
                onmouseout="this.style.borderColor='#e5e7eb'; this.style.boxShadow='none'">
             <div style="display: flex; align-items: center; gap: 1rem;">
@@ -68,9 +68,9 @@
               </div>
             </div>
             <div class="text-center font-semibold" style="text-align: center; font-weight: 600;">
-              <%= avg_overall %>⭐
+              <%= avg_overall %><%= trophy_icon %>
             </div>
-            <div class="text-center font-semibold" style="text-align: center; font-weight: 600; color: <%= club_primary_color(club) %>;">
+            <div class="text-center font-semibold" style="text-align: center; font-weight: 600; color: #0047AB;">
               R$ <%= budget_formatted %>K
             </div>
             <div class="text-center" style="text-align: center;">
@@ -80,7 +80,7 @@
               <% if club.available? %>
                 <%= button_to t('rooms.choose_club') || 'Escolher', club_path(club), method: :patch,
                     data: { confirm: "Tem certeza que deseja escolher #{club.name}?" },
-                    style: "#{club_button_style(club, 'primary')} font-size: 0.875rem;" %>
+                    style: "background-color: #0047AB; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; text-align: center; font-size: 0.875rem;" %>
               <% else %>
                 <span style="color: #6b7280; font-size: 0.875rem;"><%= t('rooms.taken') || 'Ocupado' %></span>
               <% end %>
@@ -92,10 +92,10 @@
       <!-- Bottom Info -->
       <div style="margin-top: 1.5rem; padding: 1rem; background: #f9fafb; border-radius: 8px; text-align: center;">
         <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 0.5rem;">
-          <%= lightbulb_icon(size: 16) %> <strong><%= t('rooms.tip') || 'Dica' %>:</strong> <%= t('rooms.tip_message') || 'Times com menor média têm maior orçamento inicial' %>
+          <%= lightbulb_icon %> <strong><%= t('rooms.tip') || 'Dica' %>:</strong> <%= t('rooms.tip_message') || 'Times com menor média têm maior orçamento inicial' %>
         </p>
         <p style="font-size: 0.875rem; color: #6b7280;">
-          <%= target_icon(size: '1rem', style: 'vertical-align: middle;') %> <strong><%= t('rooms.objective') || 'Objetivo' %>:</strong> <%= t('rooms.objective_message') || 'Subir da 5ª para a 1ª divisão conquistando promoções' %>
+          <%= target_icon %> <strong><%= t('rooms.objective') || 'Objetivo' %>:</strong> <%= t('rooms.objective_message') || 'Subir da 5ª para a 1ª divisão conquistando promoções' %>
         </p>
       </div>
     </div>

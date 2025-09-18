@@ -100,28 +100,55 @@ class PlayerPoolGeneratorService
     return if @room.clubs.any? # Não gerar se já existem clubes
 
     ActiveRecord::Base.transaction do
-      BRAZILIAN_CLUBS.each do |club_name, club_data|
-        # Criar clube padrão
-        club = @room.clubs.create!(
-          name: club_name,
-          city: club_data[:city],
-          stadium_name: club_data[:stadium],
-          stadium_capacity: club_data[:capacity],
-          founded_year: 1900 + rand(50), # Anos aleatórios entre 1900-1950
-          budget: 5_000_000,
-          division: Division.find_by(level: 5), # 5ª Divisão por padrão
+      # Pegar 16 clubes das salas template (identificadas pela descrição)
+      template_rooms = Room.where("description LIKE ?", "Template room for%")
+      available_clubs = Club.where(room: template_rooms, available: true)
+                           .includes(:division, :players)
+                           .limit(16)
+
+      if available_clubs.count < 16
+        Rails.logger.error "Not enough available clubs in database. Found #{available_clubs.count}, need 16."
+        return
+      end
+
+      available_clubs.each do |source_club|
+        # Criar cópia do clube para esta sala
+        room_club = @room.clubs.create!(
+          name: source_club.name,
+          city: source_club.city,
+          stadium_name: source_club.stadium_name,
+          stadium_capacity: source_club.stadium_capacity,
+          founded_year: source_club.founded_year,
+          budget: source_club.budget,
+          division: source_club.division,
           user: nil, # Nenhum usuário inicialmente
           available: true # Disponível para escolha
         )
 
-        # Criar jogadores do clube
-        club_data[:players].each do |player_data|
-          create_player_for_club(club, player_data)
+        # Copiar jogadores do clube original
+        source_club.players.each do |source_player|
+          room_club.players.create!(
+            name: source_player.name,
+            age: source_player.age,
+            position: source_player.position,
+            overall: source_player.overall,
+            strength: source_player.strength,
+            stamina: source_player.stamina,
+            speed: source_player.speed,
+            attack: source_player.attack,
+            defense: source_player.defense,
+            passing: source_player.passing,
+            salary: source_player.salary,
+            market_value: source_player.market_value,
+            nationality: source_player.nationality || 'BRA'
+          )
         end
+
+        Rails.logger.info "Copied club #{room_club.name} (#{room_club.division.name}) to room #{@room.name}"
       end
     end
 
-    Rails.logger.info "Generated #{BRAZILIAN_CLUBS.keys.count} default clubs for room #{@room.name}"
+    Rails.logger.info "Generated #{@room.clubs.count} clubs for room #{@room.name} from database pool"
   end
 
   private

@@ -46,7 +46,7 @@ module ApplicationHelper
   end
 
   def club_avatar_style(club, size = '40px')
-    "width: #{size}; height: #{size}; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #{club_contrast_text(club_primary_color(club))}; font-weight: 600; font-size: 0.875rem; background: #{club_gradient(club)};"
+    "width: #{size}; height: #{size}; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #{club_contrast_text(club_primary_color(club))}; font-weight: 600; font-size: 0.875rem; background-color: #{club_primary_color(club)};"
   end
 
   def club_card_accent_style(club)
@@ -57,7 +57,7 @@ module ApplicationHelper
     "background: linear-gradient(to right, #{club_primary_color(club)} #{percentage}%, #e5e7eb #{percentage}%);"
   end
 
-  # Helpers para emojis como ícones
+  # Helpers para ícones (usando emojis organizados)
   def football_icon(**options)
     content_tag :span, "⚽", **options
   end
@@ -116,5 +116,42 @@ module ApplicationHelper
 
   def plus_icon(**options)
     content_tag :span, "+", **options
+  end
+
+  # Helpers adicionais
+  def seedling_icon(**options)
+    content_tag :span, "🌱", **options
+  end
+
+  def email_icon(**options)
+    content_tag :span, "📧", **options
+  end
+
+  def house_icon(**options)
+    content_tag :span, "🏠", **options
+  end
+
+  def package_icon(**options)
+    content_tag :span, "📦", **options
+  end
+
+  def user_icon(**options)
+    content_tag :span, "👤", **options
+  end
+
+  def memo_icon(**options)
+    content_tag :span, "📝", **options
+  end
+
+  def checkmark_icon(**options)
+    content_tag :span, "✅", **options
+  end
+
+  def stadium_icon(**options)
+    content_tag :span, "🏟️", **options
+  end
+
+  def money_icon(**options)
+    content_tag :span, "💰", **options
   end
 end
