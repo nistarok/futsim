@@ -1,6 +1,6 @@
 class RoomsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_room, only: [:show, :edit, :update, :destroy]
+  before_action :set_room, only: [:show, :edit, :update, :destroy, :choose_random_club]
 
   def index
     @singleplayer_rooms = current_user.rooms.singleplayer.includes(:clubs)
@@ -60,6 +60,18 @@ class RoomsController < ApplicationController
   def destroy
     @room.destroy
     redirect_to rooms_path, notice: t('notices.room_deleted')
+  end
+
+  def choose_random_club
+    random_club = @room.clubs.available.order('RANDOM()').first
+
+    if random_club.nil?
+      redirect_to @room, alert: t('alerts.no_clubs_available')
+      return
+    end
+
+    random_club.claim_by!(current_user)
+    redirect_to club_path(random_club), notice: t('notices.club_chosen_randomly', club_name: random_club.name)
   end
 
   private

@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
   resources :rooms do
+    member do
+      patch :choose_random_club
+    end
     resources :clubs, only: [:new, :create]
   end
   resources :clubs do

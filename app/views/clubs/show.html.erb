@@ -9,94 +9,94 @@
           </div>
           <div>
             <h1 class="text-xl font-bold text-gray-900"><%= @club.name %></h1>
-            <p class="text-gray-600"><%= @club.division.name if @club.division %> • 4º lugar</p>
+            <p class="text-gray-600"><%= @club.division.name if @club.division %></p>
           </div>
         </div>
         <div class="text-right">
-          <p class="text-sm text-gray-600">Próxima partida</p>
-          <p class="font-semibold">vs <span style="display:inline-block;width:20px;height:20px;background:#dc2626;border-radius:4px;margin-right:4px;"></span>Internacional</p>
+          <p class="text-sm text-gray-600"><%= t('clubs.next_match') %></p>
+          <p class="font-semibold">-- / --</p>
         </div>
       </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- Statistics -->
       <div class="bg-white rounded-xl shadow-sm p-6">
-        <h3 class="text-lg font-semibold mb-4">Estatísticas</h3>
+        <h3 class="text-lg font-semibold mb-4"><%= t('clubs.statistics') %></h3>
 
         <div class="mb-4">
           <div class="flex items-center justify-between">
-            <span class="text-gray-600">Moral do Time</span>
+            <span class="text-gray-600"><%= t('clubs.team_morale') %></span>
             <div class="flex items-center gap-2">
               <div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
-                <div class="h-full rounded-full transition-all" style="width: 85%; background-color: #22c55e;"></div>
+                <div class="h-full rounded-full transition-all" style="width: 75%; background-color: #22c55e;"></div>
               </div>
-              <span class="font-semibold" style="color: #228B22;">85%</span>
+              <span class="font-semibold" style="color: #228B22;">75%</span>
             </div>
           </div>
         </div>
 
         <div class="flex justify-between mb-4">
-          <span class="text-gray-600">Média Geral</span>
+          <span class="text-gray-600"><%= t('clubs.overall_average') %></span>
           <span class="font-semibold">
             <% if @club.players.any? %>
               <%= ((@club.players.average(:overall) || 0) / 20).round(1) %>⭐
             <% else %>
-              4.2⭐
+              0⭐
             <% end %>
           </span>
         </div>
 
         <div class="flex justify-between mb-4">
-          <span class="text-gray-600">Orçamento</span>
-          <span class="font-semibold" style="color: #228B22;">R$ <%= number_with_delimiter((@club.budget || 450000) / 1000) %>K</span>
+          <span class="text-gray-600"><%= t('clubs.budget_label') %></span>
+          <span class="font-semibold" style="color: #228B22;">R$ <%= number_with_delimiter(@club.budget / 1000) %>K</span>
         </div>
 
         <div class="flex justify-between">
-          <span class="text-gray-600">Estádio</span>
-          <span class="font-semibold"><%= number_with_delimiter(@club.stadium_capacity || 15000) %></span>
+          <span class="text-gray-600"><%= t('clubs.stadium_label') %></span>
+          <span class="font-semibold"><%= number_with_delimiter(@club.stadium_capacity) %></span>
         </div>
 
         <div style="border-top: 1px solid #e5e7eb; margin-top: 1.5rem; padding-top: 1.5rem;">
-          <h4 class="font-semibold mb-4">Atributos (1-50)</h4>
+          <h4 class="font-semibold mb-4"><%= t('clubs.attributes') %></h4>
           <div class="text-sm">
             <div class="flex justify-between mb-2">
-              <span>Ataque:</span>
+              <span><%= t('clubs.attack') %>:</span>
               <span class="font-semibold">
                 <% if @club.players.any? %>
                   <%= ((@club.players.average(:attack) || 0) * 0.5).round %>
                 <% else %>
-                  38
+                  0
                 <% end %>
               </span>
             </div>
             <div class="flex justify-between mb-2">
-              <span>Defesa:</span>
+              <span><%= t('clubs.defense') %>:</span>
               <span class="font-semibold">
                 <% if @club.players.any? %>
                   <%= ((@club.players.average(:defense) || 0) * 0.5).round %>
                 <% else %>
-                  42
+                  0
                 <% end %>
               </span>
             </div>
             <div class="flex justify-between mb-2">
-              <span>Velocidade:</span>
+              <span><%= t('clubs.speed') %>:</span>
               <span class="font-semibold">
                 <% if @club.players.any? %>
                   <%= ((@club.players.average(:speed) || 0) * 0.5).round %>
                 <% else %>
-                  35
+                  0
                 <% end %>
               </span>
             </div>
             <div class="flex justify-between">
-              <span>Estamina:</span>
+              <span><%= t('clubs.stamina') %>:</span>
               <span class="font-semibold">
                 <% if @club.players.any? %>
                   <%= ((@club.players.average(:stamina) || 0) * 0.5).round %>
                 <% else %>
-                  40
+                  0
                 <% end %>
               </span>
             </div>
@@ -105,101 +105,124 @@
       </div>
 
       <!-- Players List -->
-      <div class="bg-white rounded-xl shadow-sm p-6">
+      <div class="bg-white rounded-xl shadow-sm p-6 lg:col-span-2">
         <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-semibold">Escalação</h3>
-          <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm">
-            <option>4-4-2</option>
-            <option>4-3-3</option>
-            <option>3-5-2</option>
-          </select>
-        </div>
-
-        <!-- Titulares -->
-        <h4 class="text-sm font-semibold text-gray-600 mb-4" style="text-transform: uppercase; letter-spacing: 0.05em;">Titulares</h4>
-
-        <div class="mb-6">
-          <% starters = @players.limit(5) %>
-          <% starters.each do |player| %>
-            <%
-              position_text = case player.position
-                             when 'GK' then 'GOL'
-                             when 'CB' then 'ZAG'
-                             when 'LB', 'RB' then 'LAT'
-                             when 'CDM', 'CM', 'CAM' then 'MEI'
-                             when 'LW', 'RW', 'ST' then 'ATA'
-                             else player.position
-                             end
-
-              position_color = case position_text
-                              when 'GOL' then '#228B22'
-                              when 'ZAG', 'LAT' then '#0047AB'
-                              when 'MEI' then '#ea580c'
-                              when 'ATA' then '#dc2626'
-                              else '#6b7280'
-                              end
-            %>
-            <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg mb-2 hover:border-green-300 hover:shadow-md transition-all" style="background-color: #f0fdf4; border-color: #22c55e;">
-              <div class="flex items-center gap-3">
-                <span class="px-2 py-1 rounded text-white text-xs font-semibold" style="background-color: <%= position_color %>;">
-                  <%= position_text %>
-                </span>
-                <span class="font-medium"><%= player.name %></span>
-                <span class="text-sm text-gray-600">🇧🇷 Brasil</span>
-              </div>
-              <div class="text-sm text-gray-600">
-                <span>F:<%= player.strength %> E:<%= player.stamina %> V:<%= player.speed %> A:<%= player.attack %> D:<%= player.defense %> P:<%= player.passing %></span>
-                <span class="font-semibold ml-4"><%= player.overall %>⭐</span>
-              </div>
-            </div>
+          <h3 class="text-lg font-semibold"><%= t('clubs.formation') %></h3>
+          <% if @current_lineup %>
+            <%= link_to t('lineups.edit'), lineup_club_path(@club), class: "px-4 py-2 text-white rounded-lg font-medium hover:opacity-90 transition-all text-sm", style: "background-color: #0047AB;" %>
+          <% else %>
+            <%= link_to t('clubs.create_lineup'), lineup_club_path(@club), class: "px-4 py-2 text-white rounded-lg font-medium hover:opacity-90 transition-all text-sm", style: "background-color: #228B22;" %>
           <% end %>
         </div>
 
-        <!-- Reservas -->
-        <h4 class="text-sm font-semibold text-gray-600 mb-4" style="text-transform: uppercase; letter-spacing: 0.05em;">Reservas</h4>
+        <% if @current_lineup %>
+          <p class="text-sm text-gray-600 mb-4"><%= @current_lineup.formation %> - <%= @current_lineup.name %></p>
 
-        <div class="mb-6">
-          <% reserves = @players.offset(5).limit(3) %>
-          <% reserves.each do |player| %>
-            <%
-              position_text = case player.position
-                             when 'GK' then 'GOL'
-                             when 'CB' then 'ZAG'
-                             when 'LB', 'RB' then 'LAT'
-                             when 'CDM', 'CM', 'CAM' then 'MEI'
-                             when 'LW', 'RW', 'ST' then 'ATA'
-                             else player.position
-                             end
+          <!-- Titulares -->
+          <h4 class="text-sm font-semibold text-gray-600 mb-4" style="text-transform: uppercase; letter-spacing: 0.05em;"><%= t('clubs.starters') %></h4>
 
-              position_color = case position_text
-                              when 'GOL' then '#228B22'
-                              when 'ZAG', 'LAT' then '#0047AB'
-                              when 'MEI' then '#ea580c'
-                              when 'ATA' then '#dc2626'
-                              else '#6b7280'
-                              end
-            %>
-            <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg mb-2 hover:border-green-300 hover:shadow-md transition-all">
-              <div class="flex items-center gap-3">
-                <span class="px-2 py-1 rounded text-white text-xs font-semibold" style="background-color: <%= position_color %>;">
-                  <%= position_text %>
-                </span>
-                <span class="font-medium"><%= player.name %></span>
-                <span class="text-sm text-gray-600">🇧🇷 Brasil</span>
+          <div class="mb-6">
+            <% starting_players = @current_lineup.lineup_players.where(starting: true).includes(:player) %>
+            <% if starting_players.any? %>
+              <% starting_players.each do |lineup_player| %>
+                <% player = lineup_player.player %>
+                <%
+                  position_text = case player.position
+                                 when 'GK' then 'GOL'
+                                 when 'CB' then 'ZAG'
+                                 when 'LB', 'RB' then 'LAT'
+                                 when 'CDM', 'CM', 'CAM' then 'MEI'
+                                 when 'LW', 'RW', 'ST' then 'ATA'
+                                 else player.position
+                                 end
+
+                  position_color = case position_text
+                                  when 'GOL' then '#228B22'
+                                  when 'ZAG', 'LAT' then '#0047AB'
+                                  when 'MEI' then '#ea580c'
+                                  when 'ATA' then '#dc2626'
+                                  else '#6b7280'
+                                  end
+                %>
+                <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg mb-2 hover:border-green-300 hover:shadow-md transition-all" style="background-color: #f0fdf4; border-color: #22c55e;">
+                  <div class="flex items-center gap-3">
+                    <span class="px-2 py-1 rounded text-white text-xs font-semibold" style="background-color: <%= position_color %>;">
+                      <%= position_text %>
+                    </span>
+                    <span class="font-medium"><%= player.name %></span>
+                    <span class="text-sm text-gray-600">🇧🇷 Brasil</span>
+                  </div>
+                  <div class="text-sm text-gray-600">
+                    <span>F:<%= player.strength %> E:<%= player.stamina %> V:<%= player.speed %> A:<%= player.attack %> D:<%= player.defense %> P:<%= player.passing %></span>
+                    <span class="font-semibold ml-4"><%= player.overall %>⭐</span>
+                  </div>
+                </div>
+              <% end %>
+            <% else %>
+              <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center text-gray-600">
+                <p class="text-sm"><%= t('clubs.no_starters') %></p>
               </div>
-              <div class="text-sm text-gray-600">
-                <span>F:<%= player.strength %> E:<%= player.stamina %> V:<%= player.speed %> A:<%= player.attack %> D:<%= player.defense %> P:<%= player.passing %></span>
-                <span class="font-semibold ml-4"><%= player.overall %>⭐</span>
+            <% end %>
+          </div>
+
+          <!-- Reservas -->
+          <h4 class="text-sm font-semibold text-gray-600 mb-4" style="text-transform: uppercase; letter-spacing: 0.05em;"><%= t('clubs.reserves') %></h4>
+
+          <div class="mb-6">
+            <% reserve_players = @current_lineup.lineup_players.where(starting: false).includes(:player) %>
+            <% if reserve_players.any? %>
+              <% reserve_players.each do |lineup_player| %>
+                <% player = lineup_player.player %>
+                <%
+                  position_text = case player.position
+                                 when 'GK' then 'GOL'
+                                 when 'CB' then 'ZAG'
+                                 when 'LB', 'RB' then 'LAT'
+                                 when 'CDM', 'CM', 'CAM' then 'MEI'
+                                 when 'LW', 'RW', 'ST' then 'ATA'
+                                 else player.position
+                                 end
+
+                  position_color = case position_text
+                                  when 'GOL' then '#228B22'
+                                  when 'ZAG', 'LAT' then '#0047AB'
+                                  when 'MEI' then '#ea580c'
+                                  when 'ATA' then '#dc2626'
+                                  else '#6b7280'
+                                  end
+                %>
+                <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg mb-2 hover:border-green-300 hover:shadow-md transition-all">
+                  <div class="flex items-center gap-3">
+                    <span class="px-2 py-1 rounded text-white text-xs font-semibold" style="background-color: <%= position_color %>;">
+                      <%= position_text %>
+                    </span>
+                    <span class="font-medium"><%= player.name %></span>
+                    <span class="text-sm text-gray-600">🇧🇷 Brasil</span>
+                  </div>
+                  <div class="text-sm text-gray-600">
+                    <span>F:<%= player.strength %> E:<%= player.stamina %> V:<%= player.speed %> A:<%= player.attack %> D:<%= player.defense %> P:<%= player.passing %></span>
+                    <span class="font-semibold ml-4"><%= player.overall %>⭐</span>
+                  </div>
+                </div>
+              <% end %>
+            <% else %>
+              <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center text-gray-600">
+                <p class="text-sm"><%= t('clubs.no_reserves') %></p>
               </div>
-            </div>
-          <% end %>
-        </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center text-gray-600 mb-6">
+            <div class="w-12 h-12 mx-auto bg-gray-200 rounded-full flex items-center justify-center text-gray-500 text-xl mb-3">⚽</div>
+            <p class="mb-4 text-sm"><%= t('clubs.no_current_lineup') %></p>
+          </div>
+        <% end %>
 
         <!-- Action Buttons -->
         <div class="flex gap-4 mt-6">
-          <button class="flex-1 px-6 py-3 text-white rounded-lg font-medium hover:opacity-90 transition-all" style="background-color: #0047AB;">Ver Transferências</button>
-          <button class="flex-1 px-6 py-3 text-white rounded-lg font-medium hover:opacity-90 transition-all" style="background-color: #228B22;">Histórico</button>
-          <button class="px-4 py-3 rounded-lg font-medium" style="background-color: #f3f4f6; color: #374151;">Stats</button>
+          <button class="flex-1 px-6 py-3 text-white rounded-lg font-medium hover:opacity-90 transition-all" style="background-color: #0047AB;"><%= t('clubs.view_transfers') %></button>
+          <button class="flex-1 px-6 py-3 text-white rounded-lg font-medium hover:opacity-90 transition-all" style="background-color: #228B22;"><%= t('clubs.history') %></button>
+          <button class="px-4 py-3 rounded-lg font-medium" style="background-color: #f3f4f6; color: #374151;"><%= t('clubs.stats') %></button>
         </div>
       </div>
     </div>

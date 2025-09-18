@@ -4,7 +4,7 @@
     <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
       <div class="flex items-center justify-between">
         <div>
-          <%= link_to "← Voltar às Salas", rooms_path, class: "text-gray-600 hover:text-gray-800 font-medium mb-3 inline-block" %>
+          <%= link_to "← #{t('rooms.back_to_rooms')}", rooms_path, class: "text-gray-600 hover:text-gray-800 font-medium mb-3 inline-block" %>
           <div class="flex items-center gap-4 mb-2">
             <div class="w-16 h-16 rounded-full bg-gradient-to-r from-purple-500 to-purple-600 flex items-center justify-center">
               <span class="text-2xl font-bold text-white"><%= @room.singleplayer? ? '👤' : '👥' %></span>
@@ -12,8 +12,8 @@
             <div>
               <h1 class="text-3xl font-bold text-gray-900"><%= @room.name %></h1>
               <p class="text-lg text-gray-600">
-                <%= @room.singleplayer? ? 'Sala Singleplayer' : 'Sala Multiplayer' %> •
-                Status: <%= @room.status.humanize %>
+                <%= @room.singleplayer? ? t('rooms.singleplayer_info') : t('rooms.multiplayer_info') %> •
+                Status: <%= t("rooms.status_values.#{@room.status}") %>
               </p>
             </div>
           </div>
@@ -34,11 +34,11 @@
     <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
       <div class="bg-white rounded-lg shadow-sm p-6 text-center">
         <h3 class="text-3xl font-bold text-gray-900 mb-1"><%= @room.current_players %></h3>
-        <p class="text-sm text-gray-600 font-medium">Jogadores Ativos</p>
+        <p class="text-sm text-gray-600 font-medium"><%= t('rooms.active_players') %></p>
       </div>
       <div class="bg-white rounded-lg shadow-sm p-6 text-center">
         <h3 class="text-3xl font-bold text-blue-600 mb-1"><%= @room.max_players %></h3>
-        <p class="text-sm text-gray-600 font-medium">Máximo de Jogadores</p>
+        <p class="text-sm text-gray-600 font-medium"><%= t('rooms.max_players_count') %></p>
       </div>
       <div class="bg-white rounded-lg shadow-sm p-6 text-center">
         <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold
@@ -48,19 +48,27 @@
               when 'finished' then 'bg-gray-200 text-gray-600'
               else 'bg-gray-200 text-gray-600'
               end %>">
-          <%= @room.status.humanize %>
+          <%= t("rooms.status_values.#{@room.status}") %>
         </span>
-        <p class="text-sm text-gray-600 font-medium mt-2">Status da Sala</p>
+        <p class="text-sm text-gray-600 font-medium mt-2"><%= t('rooms.room_status') %></p>
       </div>
     </div>
 
     <!-- Clubs Section -->
     <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
       <div class="flex items-center justify-between mb-6">
-        <h3 class="text-xl font-semibold text-gray-900">Clubes na Sala</h3>
-        <% if @clubs.any? %>
-          <span class="px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-600"><%= @clubs.count %> clube(s)</span>
-        <% end %>
+        <h3 class="text-xl font-semibold text-gray-900"><%= t('rooms.clubs_in_room') %></h3>
+        <div class="flex items-center gap-3">
+          <% if @clubs.any? && @clubs.available.any? %>
+            <%= button_to t('rooms.choose_random'), choose_random_club_room_path(@room), method: :patch,
+                data: { confirm: t('rooms.random_selection_confirm') },
+                class: "px-4 py-2 text-white rounded-lg font-medium hover:opacity-90 transition-all text-sm",
+                style: "background-color: #ea580c; border: none;" %>
+          <% end %>
+          <% if @clubs.any? %>
+            <span class="px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-600"><%= @clubs.count %> clube(s)</span>
+          <% end %>
+        </div>
       </div>
 
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -71,9 +79,9 @@
               <div class="flex items-center gap-2">
                 <span class="text-xs text-gray-500"><%= club.division.name if club.division %></span>
                 <% if club.available? %>
-                  <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Disponível</span>
+                  <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium"><%= t('rooms.available') %></span>
                 <% else %>
-                  <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium">Ocupado</span>
+                  <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-medium"><%= t('rooms.taken') %></span>
                 <% end %>
               </div>
             </div>
@@ -85,19 +93,19 @@
 
             <% if club.available? %>
               <div class="flex gap-2">
-                <%= button_to "Escolher Clube", club_path(club), method: :patch,
+                <%= button_to t('rooms.choose_club'), club_path(club), method: :patch,
                     data: { confirm: "Tem certeza que deseja escolher #{club.name}?" },
                     class: "flex-1 px-3 py-2 text-center text-white rounded-lg font-medium hover:opacity-90 transition-all text-sm",
                     style: "background-color: #228B22; border: none;" %>
-                <%= link_to "Ver Elenco", squad_club_path(club),
+                <%= link_to t('rooms.view_squad'), squad_club_path(club),
                     class: "px-3 py-2 text-white rounded-lg font-medium hover:opacity-90 transition-all text-sm", style: "background-color: #0047AB;" %>
               </div>
             <% else %>
               <div class="flex gap-2">
                 <span class="flex-1 px-3 py-2 text-center text-gray-500 rounded-lg bg-gray-100 text-sm font-medium">
-                  Controlado por <%= club.user.name if club.user %>
+                  <%= t('rooms.controlled_by') %> <%= club.user.name if club.user %>
                 </span>
-                <%= link_to "Ver Elenco", squad_club_path(club),
+                <%= link_to t('rooms.view_squad'), squad_club_path(club),
                     class: "px-3 py-2 text-white rounded-lg font-medium hover:opacity-90 transition-all text-sm", style: "background-color: #0047AB;" %>
               </div>
             <% end %>
@@ -111,11 +119,11 @@
       <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
         <div class="flex items-center justify-between">
           <div>
-            <h3 class="font-semibold text-blue-900">Pronto para começar?</h3>
-            <p class="text-sm text-blue-700">Sua sala está configurada e pronta para o jogo.</p>
+            <h3 class="font-semibold text-blue-900"><%= t('rooms.ready_to_start') %></h3>
+            <p class="text-sm text-blue-700"><%= t('rooms.room_ready') %></p>
           </div>
           <button class="px-6 py-3 text-white rounded-lg font-medium hover:opacity-90 transition-all" style="background-color: #0047AB;">
-            Iniciar Jogo
+            <%= t('rooms.start_game') %>
           </button>
         </div>
       </div>

@@ -38,6 +38,26 @@ pt-BR:
     losses: "Derrotas"
     new_solo_game: "Novo Jogo Solo"
     create_new_room: "Criar Nova Sala"
+    role: "Técnico/Dirigente"
+    profile: "Perfil"
+    no_singleplayer_clubs: "Você ainda não tem clubes singleplayer"
+    no_multiplayer_rooms: "Você ainda não participa de salas multiplayer"
+    create_new_club: "Criar Novo Clube"
+    create_new_room_action: "Criar Nova Sala"
+    accept_invite: "Aceitar Convite"
+    limit_reached: "Limite Atingido"
+    active: "Ativo"
+    paused: "Pausado"
+    finished: "Finalizado"
+    team_strength: "Força do Time"
+    enter: "Entrar"
+    general_stats: "Estatísticas Gerais"
+    titles_won: "Títulos Conquistados"
+    matches_played: "Jogos Disputados"
+    win_rate: "Taxa de Vitórias"
+    total_budget: "Orçamento Total"
+    ready_count: "Prontos"
+    created_by: "Criada por"
 
   # Rooms
   rooms:
@@ -79,6 +99,21 @@ pt-BR:
       active: "Ativa"
       paused: "Pausada"
       finished: "Finalizada"
+    back_to_rooms: "Voltar às Salas"
+    clubs_in_room: "Clubes na Sala"
+    active_players: "Jogadores Ativos"
+    max_players_count: "Máximo de Jogadores"
+    room_status: "Status da Sala"
+    available: "Disponível"
+    taken: "Ocupado"
+    controlled_by: "Controlado por"
+    choose_club: "Escolher Clube"
+    choose_random: "Escolher Aleatório"
+    view_squad: "Ver Elenco"
+    ready_to_start: "Pronto para começar?"
+    room_ready: "Sua sala está configurada e pronta para o jogo."
+    start_game: "Iniciar Jogo"
+    random_selection_confirm: "Tem certeza que deseja escolher um clube aleatório?"
 
   # Clubs
   clubs:
@@ -93,6 +128,28 @@ pt-BR:
     squad_size: "Elenco"
     average_overall: "Overall Médio"
     team_strength: "Força do Time"
+    statistics: "Estatísticas"
+    team_morale: "Moral do Time"
+    overall_average: "Média Geral"
+    budget_label: "Orçamento"
+    stadium_label: "Estádio"
+    attributes: "Atributos (1-50)"
+    attack: "Ataque"
+    defense: "Defesa"
+    speed: "Velocidade"
+    stamina: "Estamina"
+    formation: "Escalação"
+    starters: "Titulares"
+    reserves: "Reservas"
+    view_transfers: "Ver Transferências"
+    history: "Histórico"
+    stats: "Stats"
+    next_match: "Próxima partida"
+    vs: "vs"
+    no_current_lineup: "Nenhuma escalação ativa"
+    create_lineup: "Criar Escalação"
+    no_starters: "Nenhum jogador escalado como titular"
+    no_reserves: "Nenhum jogador escalado como reserva"
 
   # Lineups
   lineups:
@@ -194,6 +251,11 @@ pt-BR:
     lineup_created: "Escalação criada com sucesso!"
     lineup_updated: "Escalação atualizada com sucesso!"
     lineup_deleted: "Escalação removida com sucesso!"
+    club_chosen_randomly: "Você escolheu aleatoriamente o %{club_name}!"
+
+  # Error messages
+  alerts:
+    no_clubs_available: "Não há clubes disponíveis para seleção."
 
   # Time and date formats
   time:

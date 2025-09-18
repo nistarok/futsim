@@ -11,10 +11,10 @@
             </div>
             <div>
               <h1 class="text-2xl font-bold text-gray-900"><%= @current_user.name %></h1>
-              <p class="text-gray-600">Técnico/Dirigente</p>
+              <p class="text-gray-600"><%= t('dashboard.role') %></p>
             </div>
           </div>
-          <%= link_to "Perfil", profile_path, class: "px-4 py-2 rounded-lg font-medium text-white hover:opacity-90 transition-all", style: "background-color: #228B22;" %>
+          <%= link_to t('dashboard.profile'), profile_path, class: "px-4 py-2 rounded-lg font-medium text-white hover:opacity-90 transition-all", style: "background-color: #228B22;" %>
         </div>
       </div>
 
@@ -25,70 +25,41 @@
           <div class="flex items-center justify-between mb-6">
             <h2 class="text-xl font-semibold flex items-center gap-2">
               <span>👤</span>
-              Partidas Singleplayer
+              <%= t('dashboard.singleplayer_matches') %>
             </h2>
-            <span class="px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-600">4/4</span>
+            <span class="px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-600"><%= @singleplayer_clubs.count %>/5</span>
           </div>
 
-          <div class="border border-gray-200 rounded-lg p-4 mb-4 hover:border-green-300 hover:shadow-md transition-all">
-            <div class="flex items-center justify-between">
-              <div>
-                <h3 class="font-semibold">Palmeiras FC</h3>
-                <p class="text-sm text-gray-600">5ª Divisão • Rodada 8</p>
-                <p class="text-sm text-green-600 font-medium">4º lugar • Zona de acesso</p>
+          <% if @singleplayer_clubs.any? %>
+            <% @singleplayer_clubs.each do |club| %>
+              <div class="border border-gray-200 rounded-lg p-4 mb-4 hover:border-green-300 hover:shadow-md transition-all">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h3 class="font-semibold"><%= club.name %></h3>
+                    <p class="text-sm text-gray-600"><%= club.division.name %> • <%= club.city %></p>
+                    <p class="text-sm text-gray-600 font-medium"><%= t('dashboard.team_strength') %>: <%= club.team_strength %></p>
+                  </div>
+                  <div class="text-center">
+                    <div class="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 mb-2"><%= t('dashboard.active') %></div>
+                    <%= link_to "#{t('common.continue')} →", club_path(club), class: "px-4 py-2 text-sm rounded-lg font-medium text-white hover:opacity-90 transition-all", style: "background-color: #0047AB;" %>
+                  </div>
+                </div>
               </div>
-              <div class="text-center">
-                <div class="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 mb-2">Ativo</div>
-                <button class="px-4 py-2 text-sm rounded-lg font-medium text-white hover:opacity-90 transition-all" style="background-color: #0047AB;">Continuar →</button>
-              </div>
+            <% end %>
+          <% else %>
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center text-gray-600 mb-4">
+              <div class="w-12 h-12 mx-auto bg-gray-200 rounded-full flex items-center justify-center text-gray-500 text-xl mb-3">⚽</div>
+              <p class="mb-4 text-sm"><%= t('dashboard.no_singleplayer_clubs') %></p>
             </div>
-          </div>
+          <% end %>
 
-          <div class="border border-gray-200 rounded-lg p-4 mb-4 hover:border-green-300 hover:shadow-md transition-all">
-            <div class="flex items-center justify-between">
-              <div>
-                <h3 class="font-semibold">Santos FC</h3>
-                <p class="text-sm text-gray-600">1ª Divisão • Rodada 15</p>
-                <p class="text-sm text-red-600 font-medium">18º lugar • Rebaixamento</p>
-              </div>
-              <div class="text-center">
-                <div class="px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800 mb-2">Pausado</div>
-                <button class="px-4 py-2 text-sm rounded-lg font-medium text-white hover:opacity-90 transition-all" style="background-color: #0047AB;">Continuar →</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="border border-gray-200 rounded-lg p-4 mb-4 hover:border-green-300 hover:shadow-md transition-all">
-            <div class="flex items-center justify-between">
-              <div>
-                <h3 class="font-semibold">Corinthians SC</h3>
-                <p class="text-sm text-gray-600">3ª Divisão • Rodada 22</p>
-                <p class="text-sm text-gray-600 font-medium">8º lugar • Meio da tabela</p>
-              </div>
-              <div class="text-center">
-                <div class="px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-600 mb-2">Finalizado</div>
-                <button class="px-4 py-2 text-sm rounded-lg font-medium text-white hover:opacity-90 transition-all" style="background-color: #0047AB;">Ver →</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="border border-gray-200 rounded-lg p-4 mb-4 hover:border-green-300 hover:shadow-md transition-all">
-            <div class="flex items-center justify-between">
-              <div>
-                <h3 class="font-semibold">Flamengo RJ</h3>
-                <p class="text-sm text-gray-600">2ª Divisão • Rodada 12</p>
-                <p class="text-sm text-green-600 font-medium">2º lugar • Zona de acesso</p>
-              </div>
-              <div class="text-center">
-                <div class="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 mb-2">Ativo</div>
-                <button class="px-4 py-2 text-sm rounded-lg font-medium text-white hover:opacity-90 transition-all" style="background-color: #0047AB;">Continuar →</button>
-              </div>
-            </div>
-          </div>
-
-          <button class="w-full mt-6 px-4 py-3 rounded-lg font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors">
-            Limite Atingido (4/4)
-          </button>
+          <% if @singleplayer_clubs.count < 5 %>
+            <%= link_to t('dashboard.create_new_club'), new_room_path(type: 'single'), class: "w-full mt-6 px-4 py-3 rounded-lg font-medium text-white hover:opacity-90 transition-colors block text-center", style: "background-color: #228B22;" %>
+          <% else %>
+            <button class="w-full mt-6 px-4 py-3 rounded-lg font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 transition-colors">
+              <%= t('dashboard.limit_reached') %> (5/5)
+            </button>
+          <% end %>
         </div>
 
         <!-- Partidas Multiplayer -->
@@ -96,32 +67,43 @@
           <div class="flex items-center justify-between mb-6">
             <h2 class="text-xl font-semibold flex items-center gap-2">
               <span>👥</span>
-              Salas Multiplayer
+              <%= t('dashboard.multiplayer_rooms') %>
             </h2>
-            <span class="px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-600">1/2</span>
+            <span class="px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-600"><%= @multiplayer_rooms.count %>/2</span>
           </div>
 
-          <div class="border border-gray-200 rounded-lg p-4 mb-4 hover:border-green-300 hover:shadow-md transition-all">
-            <div class="flex items-center justify-between">
-              <div>
-                <h3 class="font-semibold">Liga dos Amigos</h3>
-                <p class="text-sm text-gray-600">5ª Divisão • Rodada 3</p>
-                <p class="text-sm text-gray-600">Criada por: Ricardo</p>
+          <% if @multiplayer_rooms.any? %>
+            <% @multiplayer_rooms.each do |room| %>
+              <div class="border border-gray-200 rounded-lg p-4 mb-4 hover:border-green-300 hover:shadow-md transition-all">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h3 class="font-semibold"><%= room.name %></h3>
+                    <p class="text-sm text-gray-600"><%= room.status.humanize %> • <%= room.current_players %>/<%= room.max_players %> jogadores</p>
+                    <p class="text-sm text-gray-600"><%= t('dashboard.created_by') %>: <%= room.user.name %></p>
+                  </div>
+                  <div class="text-center">
+                    <div class="px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800 mb-2">
+                      <%= room.active_users_count %>/<%= room.max_players %> <%= t('dashboard.ready_count') %>
+                    </div>
+                    <%= link_to "#{t('dashboard.enter')} →", room_path(room), class: "px-4 py-2 text-sm rounded-lg font-medium text-white hover:opacity-90 transition-all", style: "background-color: #0047AB;" %>
+                  </div>
+                </div>
               </div>
-              <div class="text-center">
-                <div class="px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800 mb-2">3/6 Prontos</div>
-                <button class="px-4 py-2 text-sm rounded-lg font-medium text-white hover:opacity-90 transition-all" style="background-color: #0047AB;">Entrar →</button>
-              </div>
+            <% end %>
+          <% else %>
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center text-gray-600 mb-4">
+              <div class="w-12 h-12 mx-auto bg-gray-200 rounded-full flex items-center justify-center text-gray-500 text-xl mb-3">👥</div>
+              <p class="mb-4 text-sm"><%= t('dashboard.no_multiplayer_rooms') %></p>
             </div>
-          </div>
+          <% end %>
 
           <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center text-gray-600">
             <div class="w-12 h-12 mx-auto bg-gray-200 rounded-full flex items-center justify-center text-gray-500 text-xl mb-3">+</div>
             <p class="mb-4 text-sm">Criar nova sala ou aceitar convite</p>
             <div class="space-y-2">
-              <%= link_to "Criar Nova Sala", new_room_path(type: 'multi'), class: "w-full px-4 py-2 rounded-lg font-medium text-white hover:opacity-90 transition-all block text-sm", style: "background-color: #228B22;" %>
+              <%= link_to t('dashboard.create_new_room_action'), new_room_path(type: 'multi'), class: "w-full px-4 py-2 rounded-lg font-medium text-white hover:opacity-90 transition-all block text-sm", style: "background-color: #228B22;" %>
               <button class="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors text-sm font-medium">
-                Aceitar Convite
+                <%= t('dashboard.accept_invite') %>
               </button>
             </div>
           </div>
@@ -131,23 +113,23 @@
 
       <!-- Estatísticas Gerais -->
       <div class="bg-white rounded-lg shadow-sm p-6 mt-6">
-        <h3 class="text-lg font-semibold mb-4">Estatísticas Gerais</h3>
+        <h3 class="text-lg font-semibold mb-4"><%= t('dashboard.general_stats') %></h3>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
           <div class="text-center p-4 rounded-lg" style="background: #f0fdf4;">
-            <div class="text-2xl font-bold text-green-600 mb-1">12</div>
-            <div class="text-sm text-gray-600">Títulos Conquistados</div>
+            <div class="text-2xl font-bold text-green-600 mb-1">0</div>
+            <div class="text-sm text-gray-600"><%= t('dashboard.titles_won') %></div>
           </div>
           <div class="text-center p-4 rounded-lg" style="background: #eff6ff;">
-            <div class="text-2xl font-bold text-blue-600 mb-1">156</div>
-            <div class="text-sm text-gray-600">Jogos Disputados</div>
+            <div class="text-2xl font-bold text-blue-600 mb-1"><%= @total_matches %></div>
+            <div class="text-sm text-gray-600"><%= t('dashboard.matches_played') %></div>
           </div>
           <div class="text-center p-4 rounded-lg" style="background: #fefce8;">
-            <div class="text-2xl font-bold text-yellow-600 mb-1">68%</div>
-            <div class="text-sm text-gray-600">Taxa de Vitórias</div>
+            <div class="text-2xl font-bold text-yellow-600 mb-1"><%= @win_rate %>%</div>
+            <div class="text-sm text-gray-600"><%= t('dashboard.win_rate') %></div>
           </div>
           <div class="text-center p-4 rounded-lg" style="background: #faf5ff;">
-            <div class="text-2xl font-bold text-purple-600 mb-1">R$ 2.3M</div>
-            <div class="text-sm text-gray-600">Valor Movimentado</div>
+            <div class="text-2xl font-bold text-purple-600 mb-1"><%= number_to_currency(@total_budget, unit: 'R$ ', delimiter: '.', separator: ',', precision: 0) %></div>
+            <div class="text-sm text-gray-600"><%= t('dashboard.total_budget') %></div>
           </div>
         </div>
       </div>
