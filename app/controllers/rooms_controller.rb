@@ -1,6 +1,6 @@
 class RoomsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_room, only: [:show, :edit, :update, :destroy, :choose_random_club]
+  before_action :set_room, only: [:show, :edit, :update, :destroy, :choose_random_club, :start_game]
 
   def index
     @singleplayer_rooms = current_user.rooms.singleplayer.includes(:clubs)
@@ -72,6 +72,32 @@ class RoomsController < ApplicationController
 
     random_club.claim_by!(current_user)
     redirect_to club_path(random_club), notice: t('notices.club_chosen_randomly', club_name: random_club.name)
+  end
+
+  def start_game
+    # Verificar se o usuário tem um clube na sala
+    user_club = @room.clubs.where(user: current_user).first
+
+    if user_club.nil?
+      redirect_to @room, alert: t('alerts.need_to_choose_club')
+      return
+    end
+
+    # Verificar se o clube tem escalação ativa
+    if user_club.lineups.where(active: true).empty?
+      redirect_to lineup_club_path(user_club), alert: t('alerts.need_to_create_lineup')
+      return
+    end
+
+    # Atualizar status da sala para ativa
+    @room.update!(status: 'active')
+
+    # Criar primeira rodada se não existir
+    if @room.rounds.empty?
+      @room.create_next_round!
+    end
+
+    redirect_to club_path(user_club), notice: t('notices.game_started')
   end
 
   private

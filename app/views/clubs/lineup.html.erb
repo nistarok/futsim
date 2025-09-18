@@ -6,8 +6,8 @@
         <div>
           <%= link_to "← Voltar ao Time", @club, class: "text-gray-600 hover:text-gray-800 font-medium mb-3 inline-block", style: "color: #6b7280; text-decoration: none; font-weight: 500; margin-bottom: 0.75rem; display: inline-block;" %>
           <div style="display: flex; align-items: center; gap: 1rem;">
-            <div style="width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(to right, #228B22, #32CD32); display: flex; align-items: center; justify-content: center;">
-              <span style="font-size: 1.5rem; font-weight: 700; color: white;">⚽</span>
+            <div style="<%= club_avatar_style(@club, '64px') %>">
+              <%= football_icon(size: '1.5rem', style: 'font-weight: 700; color: white;') %>
             </div>
             <div>
               <h1 style="font-size: 1.875rem; font-weight: 700; color: #111827;"><%= @club.name %> - <%= t('lineups.title') %></h1>
@@ -17,7 +17,7 @@
         </div>
         <div style="text-align: right;">
           <p style="font-size: 0.875rem; color: #6b7280;">Titulares Selecionados</p>
-          <p style="font-size: 1.5rem; font-weight: 700; color: #228B22;"><span id="starters-count">0</span>/11</p>
+          <p style="font-size: 1.5rem; font-weight: 700; color: <%= club_primary_color(@club) %>;"><span id="starters-count">0</span>/11</p>
         </div>
       </div>
     </div>
@@ -96,12 +96,12 @@
       <!-- Botões de Ação -->
       <div class="bg-white shadow-sm p-6" style="border-radius: 12px;">
         <div style="display: flex; gap: 1rem;">
-          <%= form.submit "💾 Salvar Escalação", class: "btn", style: "flex: 1; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; text-align: center; background-color: #0047AB; color: white;" %>
-          <button type="button" id="auto-select" style="flex: 1; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; text-align: center; background-color: #228B22; color: white;">
-            🚀 Auto Selecionar Melhores
+          <%= form.submit "#{save_icon} Salvar Escalação".html_safe, class: "btn", style: "#{club_button_style(@club, 'primary')} flex: 1;" %>
+          <button type="button" id="auto-select" style="#{club_button_style(@club, 'secondary')} flex: 1;">
+            <%= rocket_icon %> Auto Selecionar Melhores
           </button>
-          <button type="button" id="clear-lineup" style="flex: 1; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; text-align: center; background-color: #dc2626; color: white;">
-            🗑️ Limpar Escalação
+          <button type="button" id="clear-lineup" style="#{club_button_style(@club, 'outline')} flex: 1;">
+            <%= trash_icon %> Limpar Escalação
           </button>
         </div>
       </div>
@@ -158,7 +158,7 @@
 
     // Update color based on count
     if (startersCount === 11) {
-      countElement.style.color = '#22c55e';
+      countElement.style.color = '<%= club_primary_color(@club) %>';
     } else if (startersCount > 11) {
       countElement.style.color = '#dc2626';
     } else {

@@ -109,7 +109,7 @@ class PlayerPoolGeneratorService
           stadium_capacity: club_data[:capacity],
           founded_year: 1900 + rand(50), # Anos aleatórios entre 1900-1950
           budget: 5_000_000,
-          division: Division.find_by(level: 1), # Primeira divisão
+          division: Division.find_by(level: 5), # 5ª Divisão por padrão
           user: nil, # Nenhum usuário inicialmente
           available: true # Disponível para escolha
         )

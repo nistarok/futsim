@@ -86,4 +86,112 @@ class Club < ApplicationRecord
   def claim_by!(user)
     update!(user: user, available: false)
   end
+
+  def team_colors
+    CLUB_COLORS[name] || CLUB_COLORS['default']
+  end
+
+  def primary_color
+    team_colors[:primary]
+  end
+
+  def secondary_color
+    team_colors[:secondary]
+  end
+
+  def gradient
+    "linear-gradient(to right, #{primary_color}, #{secondary_color})"
+  end
+
+  private
+
+  CLUB_COLORS = {
+    # Clubes Brasileiros com cores reais
+    'Flamengo' => {
+      primary: '#E30613',    # Vermelho
+      secondary: '#000000',   # Preto
+      accent: '#FFFFFF'       # Branco
+    },
+    'Palmeiras' => {
+      primary: '#00A859',     # Verde
+      secondary: '#FFFFFF',   # Branco
+      accent: '#000000'       # Preto
+    },
+    'Santos' => {
+      primary: '#000000',     # Preto
+      secondary: '#FFFFFF',   # Branco
+      accent: '#C4C4C4'       # Cinza claro
+    },
+    'Corinthians' => {
+      primary: '#000000',     # Preto
+      secondary: '#FFFFFF',   # Branco
+      accent: '#C4C4C4'       # Cinza claro
+    },
+    'São Paulo' => {
+      primary: '#FF0000',     # Vermelho
+      secondary: '#000000',   # Preto
+      accent: '#FFFFFF'       # Branco
+    },
+    'Grêmio' => {
+      primary: '#0080C7',     # Azul
+      secondary: '#000000',   # Preto
+      accent: '#FFFFFF'       # Branco
+    },
+    'Internacional' => {
+      primary: '#FF0000',     # Vermelho
+      secondary: '#FFFFFF',   # Branco
+      accent: '#000000'       # Preto
+    },
+    'Vasco da Gama' => {
+      primary: '#000000',     # Preto
+      secondary: '#FFFFFF',   # Branco
+      accent: '#C4C4C4'       # Cinza claro
+    },
+    'Botafogo' => {
+      primary: '#000000',     # Preto
+      secondary: '#FFFFFF',   # Branco
+      accent: '#C4C4C4'       # Cinza claro
+    },
+    'Fluminense' => {
+      primary: '#8B0000',     # Grená
+      secondary: '#00FF00',   # Verde
+      accent: '#FFFFFF'       # Branco
+    },
+    'Cruzeiro' => {
+      primary: '#003DA5',     # Azul
+      secondary: '#FFFFFF',   # Branco
+      accent: '#000000'       # Preto
+    },
+    'Atlético-MG' => {
+      primary: '#000000',     # Preto
+      secondary: '#FFFFFF',   # Branco
+      accent: '#C4C4C4'       # Cinza claro
+    },
+    'Bahia' => {
+      primary: '#0047AB',     # Azul
+      secondary: '#FF0000',   # Vermelho
+      accent: '#FFFFFF'       # Branco
+    },
+    'Sport' => {
+      primary: '#FF0000',     # Vermelho
+      secondary: '#000000',   # Preto
+      accent: '#FFFFFF'       # Branco
+    },
+    'Ceará' => {
+      primary: '#000000',     # Preto
+      secondary: '#FFFFFF',   # Branco
+      accent: '#C4C4C4'       # Cinza claro
+    },
+    'Fortaleza' => {
+      primary: '#FF0000',     # Vermelho
+      secondary: '#0047AB',   # Azul
+      accent: '#FFFFFF'       # Branco
+    },
+    # Cores padrão para clubes não mapeados
+    'default' => {
+      primary: '#228B22',     # Verde padrão
+      secondary: '#32CD32',   # Verde claro
+      accent: '#FFFFFF'       # Branco
+    }
+  }.freeze
 end

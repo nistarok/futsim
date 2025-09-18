@@ -1,10 +1,10 @@
 <div class="min-h-screen" style="background-color: #f9fafb;">
   <div class="max-w-6xl mx-auto px-4 py-8">
     <!-- Team Header -->
-    <div class="bg-white shadow-sm p-6 mb-6" style="border-radius: 12px;">
+    <div class="bg-white shadow-sm p-6 mb-6" style="border-radius: 12px; <%= club_card_accent_style(@club) %>">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <div style="display: flex; align-items: center; gap: 1rem;">
-          <div style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.875rem; background-color: #228B22;">
+          <div style="<%= club_avatar_style(@club, '40px') %>">
             <%= @club.name.split.map(&:first).join[0..3].upcase %>
           </div>
           <div>
@@ -29,9 +29,9 @@
             <span class="text-gray-600"><%= t('clubs.team_morale') %></span>
             <div class="flex items-center gap-2">
               <div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
-                <div class="h-full rounded-full transition-all" style="width: 75%; background-color: #22c55e;"></div>
+                <div class="h-full rounded-full transition-all" style="width: 75%; background-color: <%= club_primary_color(@club) %>;"></div>
               </div>
-              <span class="font-semibold" style="color: #228B22;">75%</span>
+              <span class="font-semibold" style="color: <%= club_primary_color(@club) %>;">75%</span>
             </div>
           </div>
         </div>
@@ -49,7 +49,7 @@
 
         <div class="flex justify-between mb-4">
           <span class="text-gray-600"><%= t('clubs.budget_label') %></span>
-          <span class="font-semibold" style="color: #228B22;">R$ <%= number_with_delimiter(@club.budget / 1000) %>K</span>
+          <span class="font-semibold" style="color: <%= club_primary_color(@club) %>;">R$ <%= number_with_delimiter(@club.budget / 1000) %>K</span>
         </div>
 
         <div class="flex justify-between">
@@ -109,9 +109,9 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
           <h3 style="font-size: 1.125rem; font-weight: 600;"><%= t('clubs.formation') %></h3>
           <% if @current_lineup %>
-            <%= link_to t('lineups.edit'), lineup_club_path(@club), class: "btn btn-blue", style: "padding: 0.5rem 1rem; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; text-align: center; background-color: #0047AB; color: white; font-size: 0.875rem;" %>
+            <%= link_to t('lineups.edit'), lineup_club_path(@club), class: "btn", style: "#{club_button_style(@club, 'primary')} font-size: 0.875rem;" %>
           <% else %>
-            <%= link_to t('clubs.create_lineup'), lineup_club_path(@club), class: "btn btn-green", style: "padding: 0.5rem 1rem; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; text-align: center; background-color: #228B22; color: white; font-size: 0.875rem;" %>
+            <%= link_to t('clubs.create_lineup'), lineup_club_path(@club), class: "btn", style: "#{club_button_style(@club, 'primary')} font-size: 0.875rem;" %>
           <% end %>
         </div>
 
@@ -217,16 +217,16 @@
           </div>
         <% else %>
           <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center text-gray-600 mb-6">
-            <div class="w-12 h-12 mx-auto bg-gray-200 rounded-full flex items-center justify-center text-gray-500 text-xl mb-3">⚽</div>
+            <div class="w-12 h-12 mx-auto bg-gray-200 rounded-full flex items-center justify-center text-gray-500 mb-3"><%= football_icon(size: '1.5rem') %></div>
             <p class="mb-4 text-sm"><%= t('clubs.no_current_lineup') %></p>
           </div>
         <% end %>
 
         <!-- Action Buttons -->
         <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-          <button class="btn btn-blue" style="flex: 1; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; text-align: center; background-color: #0047AB; color: white;"><%= t('clubs.view_transfers') %></button>
-          <button class="btn btn-green" style="flex: 1; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; text-align: center; background-color: #228B22; color: white;"><%= t('clubs.history') %></button>
-          <button class="btn" style="background: #f3f4f6; color: #374151; padding: 0.75rem 1rem; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; text-align: center;"><%= t('clubs.stats') %></button>
+          <button class="btn" style="<%= club_button_style(@club, 'primary') %> flex: 1;"><%= t('clubs.view_transfers') %></button>
+          <button class="btn" style="<%= club_button_style(@club, 'secondary') %> flex: 1;"><%= t('clubs.history') %></button>
+          <button class="btn" style="<%= club_button_style(@club, 'outline') %> flex: 1;"><%= t('clubs.stats') %></button>
         </div>
       </div>
     </div>

@@ -19,6 +19,8 @@ gem "jbuilder"
 # Tailwind CSS for Rails [https://github.com/rails/tailwindcss-rails]
 gem "tailwindcss-rails"
 
+# Icons - removido por enquanto, usando emojis
+
 # Authentication
 gem "omniauth"
 gem "omniauth-rails_csrf_protection"

@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   resources :rooms do
     member do
+      get :choose_club
       patch :choose_random_club
+      patch :start_game
     end
     resources :clubs, only: [:new, :create]
   end
