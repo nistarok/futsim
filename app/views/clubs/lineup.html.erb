@@ -1,228 +1,225 @@
-<% content_for :title, "#{@club.name} - Escalação" %>
-
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  <!-- Header do Club -->
-  <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-    <div class="flex justify-between items-start">
-      <div>
-        <h1 class="text-3xl font-bold text-gray-900"><%= @club.name %></h1>
-        <p class="text-lg text-gray-600"><%= @club.city %> • <%= @club.division.name %></p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Navegação -->
-  <div class="flex space-x-4 mb-6">
-    <%= link_to "Elenco", squad_club_path(@club), class: "bg-gray-200 text-gray-700 px-6 py-2 rounded-lg font-medium hover:bg-gray-300" %>
-    <%= link_to "Escalação", lineup_club_path(@club), class: "bg-blue-600 text-white px-6 py-2 rounded-lg font-medium" %>
-  </div>
-
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <!-- Campo de Futebol -->
-    <div class="lg:col-span-2">
-      <div class="bg-green-500 rounded-lg p-4 relative" style="height: 600px; background: linear-gradient(to bottom, #22c55e 0%, #16a34a 50%, #15803d 100%);">
-        <h2 class="text-xl font-bold text-white mb-4 text-center">Campo - Formação: <%= @current_lineup.formation || '4-4-2' %></h2>
-
-        <!-- Área do Gol Superior -->
-        <div class="absolute top-4 left-1/2 transform -translate-x-1/2 w-32 h-8 border-2 border-white"></div>
-
-        <!-- Linha do meio -->
-        <div class="absolute top-1/2 left-0 right-0 h-0.5 bg-white"></div>
-        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 border-2 border-white rounded-full"></div>
-
-        <!-- Área do Gol Inferior -->
-        <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-32 h-8 border-2 border-white"></div>
-
-        <!-- Posições dos Jogadores (exemplo para 4-4-2) -->
-        <div id="field-positions" class="relative h-full">
-          <!-- Goleiro -->
-          <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-            <div class="player-position bg-yellow-400 text-black px-2 py-1 rounded text-xs font-bold text-center" data-position="GK">
-              GK
-              <div class="player-name text-xs mt-1"></div>
+<div class="min-h-screen" style="background-color: #f9fafb;">
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="bg-white shadow-sm p-6 mb-6" style="border-radius: 12px;">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div>
+          <%= link_to "← Voltar ao Time", @club, class: "text-gray-600 hover:text-gray-800 font-medium mb-3 inline-block", style: "color: #6b7280; text-decoration: none; font-weight: 500; margin-bottom: 0.75rem; display: inline-block;" %>
+          <div style="display: flex; align-items: center; gap: 1rem;">
+            <div style="width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(to right, #228B22, #32CD32); display: flex; align-items: center; justify-content: center;">
+              <span style="font-size: 1.5rem; font-weight: 700; color: white;">⚽</span>
+            </div>
+            <div>
+              <h1 style="font-size: 1.875rem; font-weight: 700; color: #111827;"><%= @club.name %> - <%= t('lineups.title') %></h1>
+              <p style="font-size: 1.125rem; color: #6b7280;"><%= @club.division&.name || "5ª Divisão" %></p>
             </div>
           </div>
-
-          <!-- Defesa (4) -->
-          <div class="absolute bottom-32 left-8">
-            <div class="player-position bg-blue-600 text-white px-2 py-1 rounded text-xs font-bold text-center" data-position="LB">
-              LB
-              <div class="player-name text-xs mt-1"></div>
-            </div>
-          </div>
-          <div class="absolute bottom-32 left-32">
-            <div class="player-position bg-blue-600 text-white px-2 py-1 rounded text-xs font-bold text-center" data-position="CB1">
-              CB
-              <div class="player-name text-xs mt-1"></div>
-            </div>
-          </div>
-          <div class="absolute bottom-32 right-32">
-            <div class="player-position bg-blue-600 text-white px-2 py-1 rounded text-xs font-bold text-center" data-position="CB2">
-              CB
-              <div class="player-name text-xs mt-1"></div>
-            </div>
-          </div>
-          <div class="absolute bottom-32 right-8">
-            <div class="player-position bg-blue-600 text-white px-2 py-1 rounded text-xs font-bold text-center" data-position="RB">
-              RB
-              <div class="player-name text-xs mt-1"></div>
-            </div>
-          </div>
-
-          <!-- Meio-campo (4) -->
-          <div class="absolute bottom-56 left-12">
-            <div class="player-position bg-green-600 text-white px-2 py-1 rounded text-xs font-bold text-center" data-position="LM">
-              LM
-              <div class="player-name text-xs mt-1"></div>
-            </div>
-          </div>
-          <div class="absolute bottom-56 left-28">
-            <div class="player-position bg-green-600 text-white px-2 py-1 rounded text-xs font-bold text-center" data-position="CM1">
-              CM
-              <div class="player-name text-xs mt-1"></div>
-            </div>
-          </div>
-          <div class="absolute bottom-56 right-28">
-            <div class="player-position bg-green-600 text-white px-2 py-1 rounded text-xs font-bold text-center" data-position="CM2">
-              CM
-              <div class="player-name text-xs mt-1"></div>
-            </div>
-          </div>
-          <div class="absolute bottom-56 right-12">
-            <div class="player-position bg-green-600 text-white px-2 py-1 rounded text-xs font-bold text-center" data-position="RM">
-              RM
-              <div class="player-name text-xs mt-1"></div>
-            </div>
-          </div>
-
-          <!-- Ataque (2) -->
-          <div class="absolute bottom-80 left-24">
-            <div class="player-position bg-red-600 text-white px-2 py-1 rounded text-xs font-bold text-center" data-position="ST1">
-              ST
-              <div class="player-name text-xs mt-1"></div>
-            </div>
-          </div>
-          <div class="absolute bottom-80 right-24">
-            <div class="player-position bg-red-600 text-white px-2 py-1 rounded text-xs font-bold text-center" data-position="ST2">
-              ST
-              <div class="player-name text-xs mt-1"></div>
-            </div>
-          </div>
+        </div>
+        <div style="text-align: right;">
+          <p style="font-size: 0.875rem; color: #6b7280;">Titulares Selecionados</p>
+          <p style="font-size: 1.5rem; font-weight: 700; color: #228B22;"><span id="starters-count">0</span>/11</p>
         </div>
       </div>
     </div>
 
-    <!-- Painel de Seleção -->
-    <div class="bg-white rounded-lg shadow-lg p-4">
-      <h3 class="text-lg font-bold text-gray-900 mb-4">Selecionar Jogadores</h3>
+    <%= form_with url: update_lineup_club_path(@club), method: :patch, local: true, id: "lineup-form" do |form| %>
+      <!-- Jogadores por Posição -->
+      <%
+        position_groups = [
+          { name: 'Goleiros', positions: ['GK'], color: '#228B22' },
+          { name: 'Defesa', positions: ['CB', 'LB', 'RB'], color: '#0047AB' },
+          { name: 'Meio-campo', positions: ['CDM', 'CM', 'CAM', 'LM', 'RM'], color: '#ea580c' },
+          { name: 'Ataque', positions: ['LW', 'RW', 'ST'], color: '#dc2626' }
+        ]
+      %>
 
-      <%= form_with url: update_lineup_club_path(@club), method: :patch, local: true do |form| %>
-        <% if @current_lineup.persisted? %>
-          <%= form.hidden_field :lineup_id, value: @current_lineup.id %>
-        <% end %>
+      <% position_groups.each do |group| %>
+        <div class="bg-white shadow-sm p-6 mb-6" style="border-radius: 12px;">
+          <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem; color: <%= group[:color] %>;">
+            <%= group[:name] %>
+          </h3>
 
-        <!-- Seleção por Posição -->
-        <div class="space-y-4">
-          <% ['GK', 'CB', 'LB', 'RB', 'CM', 'LM', 'RM', 'ST'].each do |position| %>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">
-                <%= position %>
-                <% if ['CB', 'CM', 'ST'].include?(position) %>
-                  <span class="text-gray-500">(2 jogadores)</span>
-                <% end %>
-              </label>
+          <% group[:positions].each do |position| %>
+            <% players = @players_by_position[position] || [] %>
+            <% if players.any? %>
+              <div class="mb-4">
+                <h4 style="font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">
+                  <%= t("players.positions.#{position}") %> (<%= players.count %> jogadores)
+                </h4>
 
-              <% if ['CB', 'CM', 'ST'].include?(position) %>
-                <!-- Posições que precisam de 2 jogadores -->
-                <select name="players[<%= position %>1]" class="w-full p-2 border border-gray-300 rounded mb-2 text-sm">
-                  <option value="">Selecione...</option>
-                  <% @players_by_position[position]&.each do |player| %>
-                    <option value="<%= player.id %>">
-                      <%= player.name %> (<%= player.overall %>)
-                    </option>
+                <div style="display: grid; gap: 0.5rem;">
+                  <% players.each do |player| %>
+                    <%
+                      is_starter = @lineup_players.any? { |lp| lp.player_id == player.id && lp.starting }
+                      position_text = case position
+                                     when 'GK' then 'GOL'
+                                     when 'CB' then 'ZAG'
+                                     when 'LB', 'RB' then 'LAT'
+                                     when 'CDM', 'CM', 'CAM' then 'MEI'
+                                     when 'LW', 'RW', 'ST' then 'ATA'
+                                     else position
+                                     end
+                    %>
+
+                    <div class="player-card <%= is_starter ? 'starter' : '' %>"
+                         data-player-id="<%= player.id %>"
+                         data-position="<%= position %>"
+                         style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; border: 2px solid <%= is_starter ? '#22c55e' : '#e5e7eb' %>; border-radius: 8px; margin-bottom: 0.5rem; transition: all 0.2s; cursor: pointer; <%= is_starter ? 'background-color: #f0fdf4;' : '' %>"
+                         onclick="togglePlayer(<%= player.id %>, '<%= position %>', this)">
+
+                      <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <span class="position-badge" style="padding: 0.25rem 0.5rem; border-radius: 4px; color: white; font-size: 0.75rem; font-weight: 600; background-color: <%= group[:color] %>;">
+                          <%= position_text %>
+                        </span>
+                        <span style="font-weight: 500;"><%= player.name %></span>
+                        <span style="font-size: 0.875rem; color: #6b7280;">🇧🇷 Brasil</span>
+                      </div>
+
+                      <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="font-size: 0.875rem; color: #6b7280;">
+                          F:<%= player.strength %> E:<%= player.stamina %> V:<%= player.speed %> A:<%= player.attack %> D:<%= player.defense %> P:<%= player.passing %>
+                        </div>
+                        <div style="font-weight: 600;"><%= player.overall %>⭐</div>
+                        <div class="starter-indicator" style="width: 20px; height: 20px; border: 2px solid #22c55e; border-radius: 50%; <%= is_starter ? 'background-color: #22c55e;' : 'background-color: white;' %>"></div>
+                      </div>
+
+                      <input type="hidden" name="players[<%= position %>_<%= player.id %>]" value="<%= player.id %>" <%= is_starter ? '' : 'disabled' %>>
+                    </div>
                   <% end %>
-                </select>
-                <select name="players[<%= position %>2]" class="w-full p-2 border border-gray-300 rounded text-sm">
-                  <option value="">Selecione...</option>
-                  <% @players_by_position[position]&.each do |player| %>
-                    <option value="<%= player.id %>">
-                      <%= player.name %> (<%= player.overall %>)
-                    </option>
-                  <% end %>
-                </select>
-              <% else %>
-                <!-- Posições que precisam de 1 jogador -->
-                <select name="players[<%= position %>]" class="w-full p-2 border border-gray-300 rounded text-sm">
-                  <option value="">Selecione...</option>
-                  <% @players_by_position[position]&.each do |player| %>
-                    <option value="<%= player.id %>">
-                      <%= player.name %> (<%= player.overall %>)
-                    </option>
-                  <% end %>
-                </select>
-              <% end %>
-            </div>
+                </div>
+              </div>
+            <% end %>
           <% end %>
         </div>
+      <% end %>
 
-        <!-- Botões de Ação -->
-        <div class="mt-6 space-y-2">
-          <%= form.submit "Salvar Escalação", class: "w-full bg-blue-600 text-white py-2 px-4 rounded font-medium hover:bg-blue-700" %>
-          <button type="button" id="auto-select" class="w-full bg-green-600 text-white py-2 px-4 rounded font-medium hover:bg-green-700">
-            Auto Selecionar Melhores
+      <!-- Botões de Ação -->
+      <div class="bg-white shadow-sm p-6" style="border-radius: 12px;">
+        <div style="display: flex; gap: 1rem;">
+          <%= form.submit "💾 Salvar Escalação", class: "btn", style: "flex: 1; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; text-align: center; background-color: #0047AB; color: white;" %>
+          <button type="button" id="auto-select" style="flex: 1; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; text-align: center; background-color: #228B22; color: white;">
+            🚀 Auto Selecionar Melhores
           </button>
-          <button type="button" id="clear-lineup" class="w-full bg-red-600 text-white py-2 px-4 rounded font-medium hover:bg-red-700">
-            Limpar Escalação
+          <button type="button" id="clear-lineup" style="flex: 1; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; text-align: center; background-color: #dc2626; color: white;">
+            🗑️ Limpar Escalação
           </button>
         </div>
-      <% end %>
-    </div>
+      </div>
+    <% end %>
   </div>
 </div>
 
 <script>
-  // Auto selecionar melhores jogadores
+  let startersCount = 0;
+  let selectedPlayers = new Set();
+
+  // Inicializar contadores
+  document.addEventListener('DOMContentLoaded', function() {
+    updateStartersCount();
+  });
+
+  function togglePlayer(playerId, position, element) {
+    const input = element.querySelector('input');
+    const indicator = element.querySelector('.starter-indicator');
+    const isCurrentlyStarter = element.classList.contains('starter');
+
+    if (isCurrentlyStarter) {
+      // Remove from starters
+      element.classList.remove('starter');
+      element.style.borderColor = '#e5e7eb';
+      element.style.backgroundColor = 'white';
+      indicator.style.backgroundColor = 'white';
+      input.disabled = true;
+      selectedPlayers.delete(playerId);
+      startersCount--;
+    } else {
+      // Add to starters (check limit)
+      if (startersCount >= 11) {
+        alert('Você só pode selecionar 11 titulares!');
+        return;
+      }
+
+      element.classList.add('starter');
+      element.style.borderColor = '#22c55e';
+      element.style.backgroundColor = '#f0fdf4';
+      indicator.style.backgroundColor = '#22c55e';
+      input.disabled = false;
+      selectedPlayers.add(playerId);
+      startersCount++;
+    }
+
+    updateStartersCount();
+  }
+
+  function updateStartersCount() {
+    const countElement = document.getElementById('starters-count');
+    startersCount = document.querySelectorAll('.starter').length;
+    countElement.textContent = startersCount;
+
+    // Update color based on count
+    if (startersCount === 11) {
+      countElement.style.color = '#22c55e';
+    } else if (startersCount > 11) {
+      countElement.style.color = '#dc2626';
+    } else {
+      countElement.style.color = '#ea580c';
+    }
+  }
+
+  // Auto select best players
   document.getElementById('auto-select').addEventListener('click', function() {
-    const positions = ['GK', 'CB', 'LB', 'RB', 'CM', 'LM', 'RM', 'ST'];
+    // Clear current selection
+    clearLineup();
 
-    positions.forEach(position => {
-      if (['CB', 'CM', 'ST'].includes(position)) {
-        // Selecionar 2 melhores para essas posições
-        const select1 = document.querySelector(`select[name="players[${position}1]"]`);
-        const select2 = document.querySelector(`select[name="players[${position}2]"]`);
+    const positionLimits = {
+      'GK': 1,
+      'CB': 2,
+      'LB': 1,
+      'RB': 1,
+      'CDM': 1,
+      'CM': 2,
+      'CAM': 1,
+      'LM': 1,
+      'RM': 1,
+      'LW': 1,
+      'RW': 1,
+      'ST': 1
+    };
 
-        if (select1 && select1.options.length > 1) select1.selectedIndex = 1;
-        if (select2 && select2.options.length > 2) select2.selectedIndex = 2;
-      } else {
-        // Selecionar 1 melhor para outras posições
-        const select = document.querySelector(`select[name="players[${position}]"]`);
-        if (select && select.options.length > 1) select.selectedIndex = 1;
+    Object.keys(positionLimits).forEach(position => {
+      const players = document.querySelectorAll(`[data-position="${position}"]`);
+      const sortedPlayers = Array.from(players).sort((a, b) => {
+        const overallA = parseInt(a.querySelector('[style*="font-weight: 600"]').textContent);
+        const overallB = parseInt(b.querySelector('[style*="font-weight: 600"]').textContent);
+        return overallB - overallA;
+      });
+
+      for (let i = 0; i < Math.min(positionLimits[position], sortedPlayers.length); i++) {
+        const player = sortedPlayers[i];
+        const playerId = parseInt(player.dataset.playerId);
+        togglePlayer(playerId, position, player);
       }
     });
 
     alert('Melhores jogadores selecionados automaticamente!');
   });
 
-  // Limpar escalação
+  // Clear lineup
   document.getElementById('clear-lineup').addEventListener('click', function() {
-    const selects = document.querySelectorAll('select');
-    selects.forEach(select => select.selectedIndex = 0);
+    clearLineup();
   });
 
-  // Atualizar campo visual (simplificado)
-  document.querySelectorAll('select').forEach(select => {
-    select.addEventListener('change', function() {
-      const position = this.name.match(/players\[(\w+)\d?\]/)[1];
-      const playerName = this.options[this.selectedIndex].text;
-
-      // Encontrar elemento no campo
-      const fieldPosition = document.querySelector(`[data-position="${position}"], [data-position="${position}1"], [data-position="${position}2"]`);
-      if (fieldPosition && this.selectedIndex > 0) {
-        const nameDiv = fieldPosition.querySelector('.player-name');
-        if (nameDiv) {
-          nameDiv.textContent = playerName.split(' ')[0]; // Primeiro nome apenas
-        }
-      }
+  function clearLineup() {
+    document.querySelectorAll('.starter').forEach(element => {
+      element.classList.remove('starter');
+      element.style.borderColor = '#e5e7eb';
+      element.style.backgroundColor = 'white';
+      element.querySelector('.starter-indicator').style.backgroundColor = 'white';
+      element.querySelector('input').disabled = true;
     });
-  });
+
+    selectedPlayers.clear();
+    startersCount = 0;
+    updateStartersCount();
+  }
 </script>

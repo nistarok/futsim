@@ -1,27 +1,27 @@
 <div class="min-h-screen" style="background-color: #f9fafb;">
   <div class="max-w-6xl mx-auto px-4 py-8">
-    <!-- Header -->
-    <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-4">
-          <div class="w-10 h-10 text-white font-semibold text-sm flex items-center justify-center rounded-full" style="background-color: #228B22;">
+    <!-- Team Header -->
+    <div class="bg-white shadow-sm p-6 mb-6" style="border-radius: 12px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.875rem; background-color: #228B22;">
             <%= @club.name.split.map(&:first).join[0..3].upcase %>
           </div>
           <div>
-            <h1 class="text-xl font-bold text-gray-900"><%= @club.name %></h1>
-            <p class="text-gray-600"><%= @club.division.name if @club.division %></p>
+            <h1 style="font-size: 1.25rem; font-weight: 700;"><%= @club.name %></h1>
+            <p style="color: #6b7280;"><%= @club.division&.name || "5ª Divisão" %> • 4º lugar</p>
           </div>
         </div>
-        <div class="text-right">
-          <p class="text-sm text-gray-600"><%= t('clubs.next_match') %></p>
-          <p class="font-semibold">-- / --</p>
+        <div>
+          <p style="font-size: 0.875rem; color: #6b7280;"><%= t('clubs.next_match') %></p>
+          <p style="font-weight: 600;">vs <span style="display:inline-block;width:20px;height:20px;background:#dc2626;border-radius:4px;margin-right:4px;"></span>-- / --</p>
         </div>
       </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <!-- Statistics -->
-      <div class="bg-white rounded-xl shadow-sm p-6">
+    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem;">
+      <!-- Stats -->
+      <div class="bg-white shadow-sm p-6" style="border-radius: 12px;">
         <h3 class="text-lg font-semibold mb-4"><%= t('clubs.statistics') %></h3>
 
         <div class="mb-4">
@@ -105,13 +105,13 @@
       </div>
 
       <!-- Players List -->
-      <div class="bg-white rounded-xl shadow-sm p-6 lg:col-span-2">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-lg font-semibold"><%= t('clubs.formation') %></h3>
+      <div class="bg-white shadow-sm p-6" style="border-radius: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3 style="font-size: 1.125rem; font-weight: 600;"><%= t('clubs.formation') %></h3>
           <% if @current_lineup %>
-            <%= link_to t('lineups.edit'), lineup_club_path(@club), class: "px-4 py-2 text-white rounded-lg font-medium hover:opacity-90 transition-all text-sm", style: "background-color: #0047AB;" %>
+            <%= link_to t('lineups.edit'), lineup_club_path(@club), class: "btn btn-blue", style: "padding: 0.5rem 1rem; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; text-align: center; background-color: #0047AB; color: white; font-size: 0.875rem;" %>
           <% else %>
-            <%= link_to t('clubs.create_lineup'), lineup_club_path(@club), class: "px-4 py-2 text-white rounded-lg font-medium hover:opacity-90 transition-all text-sm", style: "background-color: #228B22;" %>
+            <%= link_to t('clubs.create_lineup'), lineup_club_path(@club), class: "btn btn-green", style: "padding: 0.5rem 1rem; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; text-align: center; background-color: #228B22; color: white; font-size: 0.875rem;" %>
           <% end %>
         </div>
 
@@ -144,17 +144,19 @@
                                   else '#6b7280'
                                   end
                 %>
-                <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg mb-2 hover:border-green-300 hover:shadow-md transition-all" style="background-color: #f0fdf4; border-color: #22c55e;">
-                  <div class="flex items-center gap-3">
-                    <span class="px-2 py-1 rounded text-white text-xs font-semibold" style="background-color: <%= position_color %>;">
+                <div class="player-card titular" style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; border: 1px solid #22c55e; border-radius: 8px; margin-bottom: 0.5rem; transition: all 0.2s; background-color: #f0fdf4;"
+                     onmouseover="this.style.borderColor='#228B22'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.1)'"
+                     onmouseout="this.style.borderColor='#22c55e'; this.style.boxShadow='none'">
+                  <div class="player-info" style="display: flex; align-items: center; gap: 0.75rem;">
+                    <span class="position-badge" style="padding: 0.25rem 0.5rem; border-radius: 4px; color: white; font-size: 0.75rem; font-weight: 600; background-color: <%= position_color %>;">
                       <%= position_text %>
                     </span>
-                    <span class="font-medium"><%= player.name %></span>
-                    <span class="text-sm text-gray-600">🇧🇷 Brasil</span>
+                    <span style="font-weight: 500;"><%= player.name %></span>
+                    <span style="font-size: 0.875rem; color: #6b7280;">🇧🇷 Brasil</span>
                   </div>
-                  <div class="text-sm text-gray-600">
+                  <div class="stats" style="font-size: 0.875rem; color: #6b7280;">
                     <span>F:<%= player.strength %> E:<%= player.stamina %> V:<%= player.speed %> A:<%= player.attack %> D:<%= player.defense %> P:<%= player.passing %></span>
-                    <span class="font-semibold ml-4"><%= player.overall %>⭐</span>
+                    <span style="font-weight: 600; margin-left: 1rem;"><%= player.overall %>⭐</span>
                   </div>
                 </div>
               <% end %>
@@ -191,17 +193,19 @@
                                   else '#6b7280'
                                   end
                 %>
-                <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg mb-2 hover:border-green-300 hover:shadow-md transition-all">
-                  <div class="flex items-center gap-3">
-                    <span class="px-2 py-1 rounded text-white text-xs font-semibold" style="background-color: <%= position_color %>;">
+                <div class="player-card" style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 0.5rem; transition: all 0.2s;"
+                     onmouseover="this.style.borderColor='#228B22'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.1)'"
+                     onmouseout="this.style.borderColor='#e5e7eb'; this.style.boxShadow='none'">
+                  <div class="player-info" style="display: flex; align-items: center; gap: 0.75rem;">
+                    <span class="position-badge" style="padding: 0.25rem 0.5rem; border-radius: 4px; color: white; font-size: 0.75rem; font-weight: 600; background-color: <%= position_color %>;">
                       <%= position_text %>
                     </span>
-                    <span class="font-medium"><%= player.name %></span>
-                    <span class="text-sm text-gray-600">🇧🇷 Brasil</span>
+                    <span style="font-weight: 500;"><%= player.name %></span>
+                    <span style="font-size: 0.875rem; color: #6b7280;">🇧🇷 Brasil</span>
                   </div>
-                  <div class="text-sm text-gray-600">
+                  <div class="stats" style="font-size: 0.875rem; color: #6b7280;">
                     <span>F:<%= player.strength %> E:<%= player.stamina %> V:<%= player.speed %> A:<%= player.attack %> D:<%= player.defense %> P:<%= player.passing %></span>
-                    <span class="font-semibold ml-4"><%= player.overall %>⭐</span>
+                    <span style="font-weight: 600; margin-left: 1rem;"><%= player.overall %>⭐</span>
                   </div>
                 </div>
               <% end %>
@@ -219,10 +223,10 @@
         <% end %>
 
         <!-- Action Buttons -->
-        <div class="flex gap-4 mt-6">
-          <button class="flex-1 px-6 py-3 text-white rounded-lg font-medium hover:opacity-90 transition-all" style="background-color: #0047AB;"><%= t('clubs.view_transfers') %></button>
-          <button class="flex-1 px-6 py-3 text-white rounded-lg font-medium hover:opacity-90 transition-all" style="background-color: #228B22;"><%= t('clubs.history') %></button>
-          <button class="px-4 py-3 rounded-lg font-medium" style="background-color: #f3f4f6; color: #374151;"><%= t('clubs.stats') %></button>
+        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+          <button class="btn btn-blue" style="flex: 1; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; text-align: center; background-color: #0047AB; color: white;"><%= t('clubs.view_transfers') %></button>
+          <button class="btn btn-green" style="flex: 1; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; text-align: center; background-color: #228B22; color: white;"><%= t('clubs.history') %></button>
+          <button class="btn" style="background: #f3f4f6; color: #374151; padding: 0.75rem 1rem; border: none; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; text-align: center;"><%= t('clubs.stats') %></button>
         </div>
       </div>
     </div>

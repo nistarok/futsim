@@ -105,15 +105,23 @@ class ClubsController < ApplicationController
   end
 
   def update_lineup
-    @lineup = @club.lineups.find(params[:lineup_id])
+    # Find or create lineup
+    @lineup = @club.lineups.find_or_create_by(active: true) do |lineup|
+      lineup.name = "Escalação Principal"
+      lineup.formation = "4-4-2"
+      lineup.match_date = Date.current
+    end
 
     # Clear existing lineup players
     @lineup.lineup_players.destroy_all
 
     # Add new players from params
     if params[:players].present?
-      params[:players].each do |position, player_id|
+      params[:players].each do |position_key, player_id|
         next if player_id.blank?
+
+        # Extract position from key (format: "position_playerid")
+        position = position_key.split('_').first
 
         @lineup.lineup_players.create!(
           player_id: player_id,
@@ -125,6 +133,8 @@ class ClubsController < ApplicationController
 
     redirect_to lineup_club_path(@club), notice: t('notices.lineup_updated')
   rescue => e
+    Rails.logger.error "Error updating lineup: #{e.message}"
+    Rails.logger.error e.backtrace.join("\n")
     redirect_to lineup_club_path(@club), alert: t('errors.lineup_update_failed')
   end
 

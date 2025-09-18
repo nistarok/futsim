@@ -114,6 +114,12 @@ pt-BR:
     room_ready: "Sua sala está configurada e pronta para o jogo."
     start_game: "Iniciar Jogo"
     random_selection_confirm: "Tem certeza que deseja escolher um clube aleatório?"
+    club_selection_help: "Clique em um time para selecioná-lo"
+    tip: "Dica"
+    objective: "Objetivo"
+    tip_message: "Times com menor média têm maior orçamento inicial"
+    objective_message: "Subir da 5ª para a 1ª divisão conquistando promoções"
+    back_to_dashboard: "Voltar ao Dashboard"
 
   # Clubs
   clubs:
@@ -252,10 +258,18 @@ pt-BR:
     lineup_updated: "Escalação atualizada com sucesso!"
     lineup_deleted: "Escalação removida com sucesso!"
     club_chosen_randomly: "Você escolheu aleatoriamente o %{club_name}!"
+    game_started: "Jogo iniciado com sucesso! Boa sorte na sua carreira!"
 
   # Error messages
   alerts:
     no_clubs_available: "Não há clubes disponíveis para seleção."
+    need_to_choose_club: "Você precisa escolher um clube antes de iniciar o jogo."
+    need_to_create_lineup: "Você precisa criar uma escalação antes de iniciar o jogo."
+
+  errors:
+    lineup_creation_failed: "Erro ao criar escalação."
+    lineup_update_failed: "Erro ao atualizar escalação."
+    club_not_found: "Clube não encontrado."
 
   # Time and date formats
   time:
