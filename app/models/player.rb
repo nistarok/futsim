@@ -47,11 +47,11 @@ class Player < ApplicationRecord
   end
 
   def market_value_formatted
-    "R$ #{market_value.to_s(:delimited)}"
+    "R$ #{ActionController::Base.helpers.number_with_delimiter(market_value)}"
   end
 
   def salary_formatted
-    "R$ #{salary.to_s(:delimited)}"
+    "R$ #{ActionController::Base.helpers.number_with_delimiter(salary)}"
   end
 
   def young_talent?

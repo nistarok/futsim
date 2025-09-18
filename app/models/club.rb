@@ -1,7 +1,7 @@
 class Club < ApplicationRecord
   # Associations
   belongs_to :division
-  belongs_to :user
+  belongs_to :user, optional: true  # Permite clubes NPCs (sem usuário)
   belongs_to :room  # Sempre pertence a uma sala (single ou multiplayer)
   has_many :players, dependent: :destroy
   has_many :lineups, dependent: :destroy
@@ -16,6 +16,7 @@ class Club < ApplicationRecord
   validates :stadium_name, presence: true
   validates :stadium_capacity, presence: true, numericality: { greater_than: 0 }
   validates :budget, presence: true, numericality: { greater_than: 0 }
+  validates :available, inclusion: { in: [true, false] }
 
   # Nome do clube deve ser único por sala
   validates :name, uniqueness: { scope: :room_id, message: "já existe nesta sala" }
@@ -24,6 +25,8 @@ class Club < ApplicationRecord
   scope :by_division, ->(division) { where(division: division) }
   scope :by_user, ->(user) { where(user: user) }
   scope :by_room, ->(room) { where(room: room) }
+  scope :available, -> { where(available: true) }
+  scope :taken, -> { where(available: false) }
   scope :singleplayer, -> { joins(:room).where(rooms: { is_multiplayer: false }) }
   scope :multiplayer, -> { joins(:room).where(rooms: { is_multiplayer: true }) }
 
@@ -42,7 +45,7 @@ class Club < ApplicationRecord
   end
 
   def budget_formatted
-    "R$ #{budget.to_s(:delimited)}"
+    "R$ #{ActionController::Base.helpers.number_with_delimiter(budget)}"
   end
 
   def team_strength
@@ -62,5 +65,25 @@ class Club < ApplicationRecord
 
   def singleplayer?
     room_id.nil?
+  end
+
+  def controlled_by_user?
+    user_id.present?
+  end
+
+  def npc?
+    user_id.nil?
+  end
+
+  def available?
+    available == true
+  end
+
+  def taken?
+    !available?
+  end
+
+  def claim_by!(user)
+    update!(user: user, available: false)
   end
 end

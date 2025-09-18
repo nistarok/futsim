@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_16_202620) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_17_224323) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -22,10 +22,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_16_202620) do
     t.integer "stadium_capacity"
     t.decimal "budget"
     t.bigint "division_id", null: false
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "room_id", null: false
+    t.boolean "available"
     t.index ["division_id"], name: "index_clubs_on_division_id"
     t.index ["room_id"], name: "index_clubs_on_room_id"
     t.index ["user_id"], name: "index_clubs_on_user_id"
@@ -62,6 +63,34 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_16_202620) do
     t.index ["club_id"], name: "index_lineups_on_club_id"
   end
 
+  create_table "matches", force: :cascade do |t|
+    t.bigint "round_id", null: false
+    t.bigint "home_club_id", null: false
+    t.bigint "away_club_id", null: false
+    t.integer "home_score"
+    t.integer "away_score"
+    t.string "status"
+    t.datetime "match_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "match_events"
+    t.index ["away_club_id"], name: "index_matches_on_away_club_id"
+    t.index ["home_club_id"], name: "index_matches_on_home_club_id"
+    t.index ["round_id"], name: "index_matches_on_round_id"
+  end
+
+  create_table "move_approvals", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "round_id", null: false
+    t.string "status"
+    t.datetime "approved_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["round_id"], name: "index_move_approvals_on_round_id"
+    t.index ["user_id", "round_id"], name: "index_move_approvals_on_user_id_and_round_id", unique: true
+    t.index ["user_id"], name: "index_move_approvals_on_user_id"
+  end
+
   create_table "players", force: :cascade do |t|
     t.string "name"
     t.string "nationality"
@@ -95,6 +124,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_16_202620) do
     t.index ["user_id"], name: "index_rooms_on_user_id"
   end
 
+  create_table "rounds", force: :cascade do |t|
+    t.bigint "room_id", null: false
+    t.integer "number"
+    t.string "status"
+    t.date "start_date"
+    t.date "end_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["room_id"], name: "index_rounds_on_room_id"
+  end
+
   create_table "seasons", force: :cascade do |t|
     t.string "name"
     t.integer "year"
@@ -120,6 +160,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_16_202620) do
     t.datetime "invitation_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "role", default: "player", null: false
+    t.index ["role"], name: "index_users_on_role"
   end
 
   add_foreign_key "clubs", "divisions"
@@ -128,8 +170,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_16_202620) do
   add_foreign_key "lineup_players", "lineups"
   add_foreign_key "lineup_players", "players"
   add_foreign_key "lineups", "clubs"
+  add_foreign_key "matches", "clubs", column: "away_club_id"
+  add_foreign_key "matches", "clubs", column: "home_club_id"
+  add_foreign_key "matches", "rounds"
+  add_foreign_key "move_approvals", "rounds"
+  add_foreign_key "move_approvals", "users"
   add_foreign_key "players", "clubs"
   add_foreign_key "rooms", "users"
+  add_foreign_key "rounds", "rooms"
   add_foreign_key "seasons", "divisions"
   add_foreign_key "seasons", "rooms"
 end

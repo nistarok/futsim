@@ -1,0 +1,163 @@
+<% content_for :title, "#{@club.name} - Rodadas" %>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Header do Club -->
+  <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+    <div class="flex justify-between items-start">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900"><%= @club.name %></h1>
+        <p class="text-lg text-gray-600"><%= @club.city %> • <%= @club.division.name %></p>
+        <p class="text-sm text-gray-500">Sala: <%= @room.name %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navegação -->
+  <div class="flex space-x-4 mb-6">
+    <%= link_to "Elenco", squad_club_path(@club), class: "bg-gray-200 text-gray-700 px-6 py-2 rounded-lg font-medium hover:bg-gray-300" %>
+    <%= link_to "Escalação", lineup_club_path(@club), class: "bg-gray-200 text-gray-700 px-6 py-2 rounded-lg font-medium hover:bg-gray-300" %>
+    <%= link_to "Rodadas", rounds_club_path(@club), class: "bg-blue-600 text-white px-6 py-2 rounded-lg font-medium" %>
+  </div>
+
+  <!-- Rodada Atual -->
+  <% if @current_round %>
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4"><%= @current_round.display_name %></h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-blue-50 rounded-lg p-4">
+          <h3 class="text-lg font-semibold text-blue-900">Status da Rodada</h3>
+          <p class="text-blue-700 capitalize"><%= @current_round.status.humanize %></p>
+        </div>
+
+        <div class="bg-green-50 rounded-lg p-4">
+          <h3 class="text-lg font-semibold text-green-900">Usuários Ativos</h3>
+          <p class="text-green-700"><%= @room.active_users_count %></p>
+        </div>
+
+        <div class="bg-yellow-50 rounded-lg p-4">
+          <h3 class="text-lg font-semibold text-yellow-900">Aprovações Pendentes</h3>
+          <p class="text-yellow-700"><%= @current_round.pending_approvals_count %></p>
+        </div>
+      </div>
+
+      <!-- Status de Aprovação do Usuário -->
+      <div class="bg-gray-50 rounded-lg p-4 mb-4">
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">Sua Aprovação</h3>
+        <% case @user_approval_status %>
+        <% when 'approved' %>
+          <div class="flex items-center text-green-600">
+            <span class="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
+            Você aprovou esta rodada
+          </div>
+        <% when 'pending' %>
+          <div class="flex items-center text-yellow-600">
+            <span class="w-3 h-3 bg-yellow-500 rounded-full mr-2"></span>
+            Aprovação pendente
+          </div>
+        <% when 'rejected' %>
+          <div class="flex items-center text-red-600">
+            <span class="w-3 h-3 bg-red-500 rounded-full mr-2"></span>
+            Você rejeitou esta rodada
+          </div>
+        <% else %>
+          <div class="flex items-center text-gray-600">
+            <span class="w-3 h-3 bg-gray-500 rounded-full mr-2"></span>
+            Ainda não enviou aprovação
+          </div>
+
+          <div class="mt-4">
+            <button class="bg-green-600 text-white px-4 py-2 rounded font-medium hover:bg-green-700 mr-2">
+              Aprovar Rodada
+            </button>
+            <button class="bg-red-600 text-white px-4 py-2 rounded font-medium hover:bg-red-700">
+              Rejeitar Rodada
+            </button>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Status Geral -->
+      <% if @current_round.all_approved? %>
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+          <strong>🎉 Todos aprovaram!</strong> A rodada está pronta para simulação.
+        </div>
+      <% else %>
+        <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded">
+          <strong>⏳ Aguardando aprovações:</strong> <%= @current_round.pending_approvals_count %> usuário(s) ainda não aprovaram.
+        </div>
+      <% end %>
+
+      <!-- Partidas da Rodada -->
+      <% if @current_round.matches.any? %>
+        <div class="mt-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Partidas</h3>
+          <div class="space-y-2">
+            <% @current_round.matches.each do |match| %>
+              <div class="bg-gray-50 rounded-lg p-4">
+                <div class="flex justify-between items-center">
+                  <div>
+                    <span class="font-medium"><%= match.display_result %></span>
+                    <span class="text-sm text-gray-500 ml-2">(<%= match.status.humanize %>)</span>
+                  </div>
+                  <% if match.completed? %>
+                    <div class="text-right">
+                      <div class="text-sm text-gray-500">Resultado</div>
+                      <div class="font-bold">
+                        <%= match.home_score %> x <%= match.away_score %>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% else %>
+        <div class="mt-6 text-center text-gray-500">
+          <p>Nenhuma partida programada para esta rodada ainda.</p>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded">
+      <strong>Nenhuma rodada ativa.</strong> Aguarde a criação da próxima rodada.
+    </div>
+  <% end %>
+
+  <!-- Histórico de Rodadas -->
+  <% if @rounds.completed.any? %>
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">Histórico</h2>
+      <div class="space-y-4">
+        <% @rounds.completed.each do |round| %>
+          <div class="border border-gray-200 rounded-lg p-4">
+            <div class="flex justify-between items-center">
+              <div>
+                <h3 class="text-lg font-semibold"><%= round.display_name %></h3>
+                <p class="text-sm text-gray-500">
+                  <%= round.start_date.strftime('%d/%m/%Y') %> - <%= round.end_date.strftime('%d/%m/%Y') %>
+                </p>
+              </div>
+              <div class="text-right">
+                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                  Finalizada
+                </span>
+              </div>
+            </div>
+
+            <% if round.matches.completed.any? %>
+              <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
+                <% round.matches.completed.limit(4).each do |match| %>
+                  <div class="text-sm text-gray-600">
+                    <%= match.display_result %>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

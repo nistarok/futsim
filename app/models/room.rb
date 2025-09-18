@@ -1,6 +1,7 @@
 class Room < ApplicationRecord
   belongs_to :user
   has_many :clubs, dependent: :destroy
+  has_many :rounds, dependent: :destroy
 
   # Validations
   validates :name, presence: true
@@ -33,6 +34,30 @@ class Room < ApplicationRecord
 
   def can_add_player?
     current_players < max_players
+  end
+
+  # Métodos para rodadas
+  def current_round
+    rounds.current.first
+  end
+
+  def latest_round
+    rounds.order(:number).last
+  end
+
+  def create_next_round!
+    next_number = latest_round&.number&.+(1) || 1
+
+    rounds.create!(
+      number: next_number,
+      status: Round::PREPARATION,
+      start_date: Date.current,
+      end_date: Date.current + 7.days
+    )
+  end
+
+  def active_users_count
+    clubs.joins(:user).distinct.count(:user_id)
   end
 
   private

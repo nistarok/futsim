@@ -36,4 +36,36 @@ class SessionsController < ApplicationController
   def failure
     redirect_to root_path, alert: "Authentication failed: #{params[:message]}"
   end
+
+  # Development only methods
+  def dev_login_admin
+    return head :not_found unless Rails.env.development?
+
+    admin = User.find_by(role: 'admin')
+    if admin
+      session[:user_id] = admin.id
+      redirect_to root_path, notice: "Dev login: Signed in as #{admin.name} (Admin)"
+    else
+      redirect_to root_path, alert: "No admin user found"
+    end
+  end
+
+  def dev_login_player
+    return head :not_found unless Rails.env.development?
+
+    player = User.find_by(role: 'player')
+    if player
+      session[:user_id] = player.id
+      redirect_to root_path, notice: "Dev login: Signed in as #{player.name} (Player)"
+    else
+      redirect_to root_path, alert: "No player user found"
+    end
+  end
+
+  def dev_logout
+    return head :not_found unless Rails.env.development?
+
+    session[:user_id] = nil
+    redirect_to root_path, notice: "Dev logout: Successfully signed out"
+  end
 end

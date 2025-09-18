@@ -1,0 +1,228 @@
+<% content_for :title, "#{@club.name} - Escalação" %>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Header do Club -->
+  <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+    <div class="flex justify-between items-start">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900"><%= @club.name %></h1>
+        <p class="text-lg text-gray-600"><%= @club.city %> • <%= @club.division.name %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navegação -->
+  <div class="flex space-x-4 mb-6">
+    <%= link_to "Elenco", squad_club_path(@club), class: "bg-gray-200 text-gray-700 px-6 py-2 rounded-lg font-medium hover:bg-gray-300" %>
+    <%= link_to "Escalação", lineup_club_path(@club), class: "bg-blue-600 text-white px-6 py-2 rounded-lg font-medium" %>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Campo de Futebol -->
+    <div class="lg:col-span-2">
+      <div class="bg-green-500 rounded-lg p-4 relative" style="height: 600px; background: linear-gradient(to bottom, #22c55e 0%, #16a34a 50%, #15803d 100%);">
+        <h2 class="text-xl font-bold text-white mb-4 text-center">Campo - Formação: <%= @current_lineup.formation || '4-4-2' %></h2>
+
+        <!-- Área do Gol Superior -->
+        <div class="absolute top-4 left-1/2 transform -translate-x-1/2 w-32 h-8 border-2 border-white"></div>
+
+        <!-- Linha do meio -->
+        <div class="absolute top-1/2 left-0 right-0 h-0.5 bg-white"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 border-2 border-white rounded-full"></div>
+
+        <!-- Área do Gol Inferior -->
+        <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-32 h-8 border-2 border-white"></div>
+
+        <!-- Posições dos Jogadores (exemplo para 4-4-2) -->
+        <div id="field-positions" class="relative h-full">
+          <!-- Goleiro -->
+          <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+            <div class="player-position bg-yellow-400 text-black px-2 py-1 rounded text-xs font-bold text-center" data-position="GK">
+              GK
+              <div class="player-name text-xs mt-1"></div>
+            </div>
+          </div>
+
+          <!-- Defesa (4) -->
+          <div class="absolute bottom-32 left-8">
+            <div class="player-position bg-blue-600 text-white px-2 py-1 rounded text-xs font-bold text-center" data-position="LB">
+              LB
+              <div class="player-name text-xs mt-1"></div>
+            </div>
+          </div>
+          <div class="absolute bottom-32 left-32">
+            <div class="player-position bg-blue-600 text-white px-2 py-1 rounded text-xs font-bold text-center" data-position="CB1">
+              CB
+              <div class="player-name text-xs mt-1"></div>
+            </div>
+          </div>
+          <div class="absolute bottom-32 right-32">
+            <div class="player-position bg-blue-600 text-white px-2 py-1 rounded text-xs font-bold text-center" data-position="CB2">
+              CB
+              <div class="player-name text-xs mt-1"></div>
+            </div>
+          </div>
+          <div class="absolute bottom-32 right-8">
+            <div class="player-position bg-blue-600 text-white px-2 py-1 rounded text-xs font-bold text-center" data-position="RB">
+              RB
+              <div class="player-name text-xs mt-1"></div>
+            </div>
+          </div>
+
+          <!-- Meio-campo (4) -->
+          <div class="absolute bottom-56 left-12">
+            <div class="player-position bg-green-600 text-white px-2 py-1 rounded text-xs font-bold text-center" data-position="LM">
+              LM
+              <div class="player-name text-xs mt-1"></div>
+            </div>
+          </div>
+          <div class="absolute bottom-56 left-28">
+            <div class="player-position bg-green-600 text-white px-2 py-1 rounded text-xs font-bold text-center" data-position="CM1">
+              CM
+              <div class="player-name text-xs mt-1"></div>
+            </div>
+          </div>
+          <div class="absolute bottom-56 right-28">
+            <div class="player-position bg-green-600 text-white px-2 py-1 rounded text-xs font-bold text-center" data-position="CM2">
+              CM
+              <div class="player-name text-xs mt-1"></div>
+            </div>
+          </div>
+          <div class="absolute bottom-56 right-12">
+            <div class="player-position bg-green-600 text-white px-2 py-1 rounded text-xs font-bold text-center" data-position="RM">
+              RM
+              <div class="player-name text-xs mt-1"></div>
+            </div>
+          </div>
+
+          <!-- Ataque (2) -->
+          <div class="absolute bottom-80 left-24">
+            <div class="player-position bg-red-600 text-white px-2 py-1 rounded text-xs font-bold text-center" data-position="ST1">
+              ST
+              <div class="player-name text-xs mt-1"></div>
+            </div>
+          </div>
+          <div class="absolute bottom-80 right-24">
+            <div class="player-position bg-red-600 text-white px-2 py-1 rounded text-xs font-bold text-center" data-position="ST2">
+              ST
+              <div class="player-name text-xs mt-1"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Painel de Seleção -->
+    <div class="bg-white rounded-lg shadow-lg p-4">
+      <h3 class="text-lg font-bold text-gray-900 mb-4">Selecionar Jogadores</h3>
+
+      <%= form_with url: update_lineup_club_path(@club), method: :patch, local: true do |form| %>
+        <% if @current_lineup.persisted? %>
+          <%= form.hidden_field :lineup_id, value: @current_lineup.id %>
+        <% end %>
+
+        <!-- Seleção por Posição -->
+        <div class="space-y-4">
+          <% ['GK', 'CB', 'LB', 'RB', 'CM', 'LM', 'RM', 'ST'].each do |position| %>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">
+                <%= position %>
+                <% if ['CB', 'CM', 'ST'].include?(position) %>
+                  <span class="text-gray-500">(2 jogadores)</span>
+                <% end %>
+              </label>
+
+              <% if ['CB', 'CM', 'ST'].include?(position) %>
+                <!-- Posições que precisam de 2 jogadores -->
+                <select name="players[<%= position %>1]" class="w-full p-2 border border-gray-300 rounded mb-2 text-sm">
+                  <option value="">Selecione...</option>
+                  <% @players_by_position[position]&.each do |player| %>
+                    <option value="<%= player.id %>">
+                      <%= player.name %> (<%= player.overall %>)
+                    </option>
+                  <% end %>
+                </select>
+                <select name="players[<%= position %>2]" class="w-full p-2 border border-gray-300 rounded text-sm">
+                  <option value="">Selecione...</option>
+                  <% @players_by_position[position]&.each do |player| %>
+                    <option value="<%= player.id %>">
+                      <%= player.name %> (<%= player.overall %>)
+                    </option>
+                  <% end %>
+                </select>
+              <% else %>
+                <!-- Posições que precisam de 1 jogador -->
+                <select name="players[<%= position %>]" class="w-full p-2 border border-gray-300 rounded text-sm">
+                  <option value="">Selecione...</option>
+                  <% @players_by_position[position]&.each do |player| %>
+                    <option value="<%= player.id %>">
+                      <%= player.name %> (<%= player.overall %>)
+                    </option>
+                  <% end %>
+                </select>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Botões de Ação -->
+        <div class="mt-6 space-y-2">
+          <%= form.submit "Salvar Escalação", class: "w-full bg-blue-600 text-white py-2 px-4 rounded font-medium hover:bg-blue-700" %>
+          <button type="button" id="auto-select" class="w-full bg-green-600 text-white py-2 px-4 rounded font-medium hover:bg-green-700">
+            Auto Selecionar Melhores
+          </button>
+          <button type="button" id="clear-lineup" class="w-full bg-red-600 text-white py-2 px-4 rounded font-medium hover:bg-red-700">
+            Limpar Escalação
+          </button>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Auto selecionar melhores jogadores
+  document.getElementById('auto-select').addEventListener('click', function() {
+    const positions = ['GK', 'CB', 'LB', 'RB', 'CM', 'LM', 'RM', 'ST'];
+
+    positions.forEach(position => {
+      if (['CB', 'CM', 'ST'].includes(position)) {
+        // Selecionar 2 melhores para essas posições
+        const select1 = document.querySelector(`select[name="players[${position}1]"]`);
+        const select2 = document.querySelector(`select[name="players[${position}2]"]`);
+
+        if (select1 && select1.options.length > 1) select1.selectedIndex = 1;
+        if (select2 && select2.options.length > 2) select2.selectedIndex = 2;
+      } else {
+        // Selecionar 1 melhor para outras posições
+        const select = document.querySelector(`select[name="players[${position}]"]`);
+        if (select && select.options.length > 1) select.selectedIndex = 1;
+      }
+    });
+
+    alert('Melhores jogadores selecionados automaticamente!');
+  });
+
+  // Limpar escalação
+  document.getElementById('clear-lineup').addEventListener('click', function() {
+    const selects = document.querySelectorAll('select');
+    selects.forEach(select => select.selectedIndex = 0);
+  });
+
+  // Atualizar campo visual (simplificado)
+  document.querySelectorAll('select').forEach(select => {
+    select.addEventListener('change', function() {
+      const position = this.name.match(/players\[(\w+)\d?\]/)[1];
+      const playerName = this.options[this.selectedIndex].text;
+
+      // Encontrar elemento no campo
+      const fieldPosition = document.querySelector(`[data-position="${position}"], [data-position="${position}1"], [data-position="${position}2"]`);
+      if (fieldPosition && this.selectedIndex > 0) {
+        const nameDiv = fieldPosition.querySelector('.player-name');
+        if (nameDiv) {
+          nameDiv.textContent = playerName.split(' ')[0]; // Primeiro nome apenas
+        }
+      }
+    });
+  });
+</script>

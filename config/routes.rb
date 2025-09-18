@@ -1,6 +1,16 @@
 Rails.application.routes.draw do
-  resources :rooms
+  resources :rooms do
+    resources :clubs, only: [:new, :create]
+  end
   resources :clubs do
+    member do
+      get :squad
+      get :lineup
+      get :rounds
+      post :create_lineup
+      patch :update_lineup
+      patch :update, as: :claim
+    end
     resources :lineups
   end
   get "profile", to: "profiles#show"
@@ -18,6 +28,13 @@ Rails.application.routes.draw do
 
   # Invitation routes
   resources :invitations, only: [:index, :create, :destroy]
+
+  # Development only: direct login routes
+  if Rails.env.development?
+    get '/dev/login_admin', to: 'sessions#dev_login_admin'
+    get '/dev/login_player', to: 'sessions#dev_login_player'
+    get '/dev/logout', to: 'sessions#dev_logout'
+  end
 
   # Defines the root path route ("/")
   root "pages#home"

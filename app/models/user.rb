@@ -1,18 +1,22 @@
 class User < ApplicationRecord
   has_many :rooms, dependent: :destroy
   has_many :clubs, dependent: :destroy
+  has_many :move_approvals, dependent: :destroy
 
   validates :email, presence: true, uniqueness: true
   validates :provider, presence: true, if: :persisted?
   validates :uid, presence: true, if: :persisted?
   validates :name, presence: true, if: :persisted?
-  
+  validates :role, presence: true, inclusion: { in: %w[player admin] }
+
   # Validations for invitation tokens
   validates :invitation_token, uniqueness: { allow_nil: true }
   
   # Scopes
   scope :invited, -> { where.not(invitation_token: nil) }
   scope :active, -> { where(invitation_token: nil) }
+  scope :admins, -> { where(role: 'admin') }
+  scope :players, -> { where(role: 'player') }
   
   # Callbacks
   before_create :generate_invitation_token, if: :new_record?
@@ -53,7 +57,15 @@ class User < ApplicationRecord
   def active?
     !invited?
   end
-  
+
+  def admin?
+    role == 'admin'
+  end
+
+  def player?
+    role == 'player'
+  end
+
   def invitation_expired?
     invitation_created_at.present? && invitation_created_at < 24.hours.ago
   end

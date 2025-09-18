@@ -38,6 +38,8 @@ class RoomsController < ApplicationController
     @room.status ||= 'waiting'
 
     if @room.save
+      # Gerar clubes padrão com jogadores
+      PlayerPoolGeneratorService.new(@room).generate_default_clubs!
       redirect_to @room, notice: t('notices.room_created')
     else
       render :new, status: :unprocessable_entity

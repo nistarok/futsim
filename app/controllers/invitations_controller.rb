@@ -1,6 +1,6 @@
 class InvitationsController < ApplicationController
-  before_action :authenticate_user!
-  
+  before_action :authenticate_admin!
+
   def index
     @invited_users = User.invited.order(:created_at)
   end
@@ -23,9 +23,4 @@ class InvitationsController < ApplicationController
   end
   
   private
-
-  def require_admin
-    # Future: Add admin role check when admin system is implemented
-    # redirect_to root_path, alert: 'Access denied' unless current_user&.admin?
-  end
 end

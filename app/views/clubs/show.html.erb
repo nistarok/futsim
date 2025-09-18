@@ -1,0 +1,207 @@
+<div class="min-h-screen" style="background-color: #f9fafb;">
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <div class="w-10 h-10 text-white font-semibold text-sm flex items-center justify-center rounded-full" style="background-color: #228B22;">
+            <%= @club.name.split.map(&:first).join[0..3].upcase %>
+          </div>
+          <div>
+            <h1 class="text-xl font-bold text-gray-900"><%= @club.name %></h1>
+            <p class="text-gray-600"><%= @club.division.name if @club.division %> • 4º lugar</p>
+          </div>
+        </div>
+        <div class="text-right">
+          <p class="text-sm text-gray-600">Próxima partida</p>
+          <p class="font-semibold">vs <span style="display:inline-block;width:20px;height:20px;background:#dc2626;border-radius:4px;margin-right:4px;"></span>Internacional</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Statistics -->
+      <div class="bg-white rounded-xl shadow-sm p-6">
+        <h3 class="text-lg font-semibold mb-4">Estatísticas</h3>
+
+        <div class="mb-4">
+          <div class="flex items-center justify-between">
+            <span class="text-gray-600">Moral do Time</span>
+            <div class="flex items-center gap-2">
+              <div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div class="h-full rounded-full transition-all" style="width: 85%; background-color: #22c55e;"></div>
+              </div>
+              <span class="font-semibold" style="color: #228B22;">85%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-between mb-4">
+          <span class="text-gray-600">Média Geral</span>
+          <span class="font-semibold">
+            <% if @club.players.any? %>
+              <%= ((@club.players.average(:overall) || 0) / 20).round(1) %>⭐
+            <% else %>
+              4.2⭐
+            <% end %>
+          </span>
+        </div>
+
+        <div class="flex justify-between mb-4">
+          <span class="text-gray-600">Orçamento</span>
+          <span class="font-semibold" style="color: #228B22;">R$ <%= number_with_delimiter((@club.budget || 450000) / 1000) %>K</span>
+        </div>
+
+        <div class="flex justify-between">
+          <span class="text-gray-600">Estádio</span>
+          <span class="font-semibold"><%= number_with_delimiter(@club.stadium_capacity || 15000) %></span>
+        </div>
+
+        <div style="border-top: 1px solid #e5e7eb; margin-top: 1.5rem; padding-top: 1.5rem;">
+          <h4 class="font-semibold mb-4">Atributos (1-50)</h4>
+          <div class="text-sm">
+            <div class="flex justify-between mb-2">
+              <span>Ataque:</span>
+              <span class="font-semibold">
+                <% if @club.players.any? %>
+                  <%= ((@club.players.average(:attack) || 0) * 0.5).round %>
+                <% else %>
+                  38
+                <% end %>
+              </span>
+            </div>
+            <div class="flex justify-between mb-2">
+              <span>Defesa:</span>
+              <span class="font-semibold">
+                <% if @club.players.any? %>
+                  <%= ((@club.players.average(:defense) || 0) * 0.5).round %>
+                <% else %>
+                  42
+                <% end %>
+              </span>
+            </div>
+            <div class="flex justify-between mb-2">
+              <span>Velocidade:</span>
+              <span class="font-semibold">
+                <% if @club.players.any? %>
+                  <%= ((@club.players.average(:speed) || 0) * 0.5).round %>
+                <% else %>
+                  35
+                <% end %>
+              </span>
+            </div>
+            <div class="flex justify-between">
+              <span>Estamina:</span>
+              <span class="font-semibold">
+                <% if @club.players.any? %>
+                  <%= ((@club.players.average(:stamina) || 0) * 0.5).round %>
+                <% else %>
+                  40
+                <% end %>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Players List -->
+      <div class="bg-white rounded-xl shadow-sm p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold">Escalação</h3>
+          <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm">
+            <option>4-4-2</option>
+            <option>4-3-3</option>
+            <option>3-5-2</option>
+          </select>
+        </div>
+
+        <!-- Titulares -->
+        <h4 class="text-sm font-semibold text-gray-600 mb-4" style="text-transform: uppercase; letter-spacing: 0.05em;">Titulares</h4>
+
+        <div class="mb-6">
+          <% starters = @players.limit(5) %>
+          <% starters.each do |player| %>
+            <%
+              position_text = case player.position
+                             when 'GK' then 'GOL'
+                             when 'CB' then 'ZAG'
+                             when 'LB', 'RB' then 'LAT'
+                             when 'CDM', 'CM', 'CAM' then 'MEI'
+                             when 'LW', 'RW', 'ST' then 'ATA'
+                             else player.position
+                             end
+
+              position_color = case position_text
+                              when 'GOL' then '#228B22'
+                              when 'ZAG', 'LAT' then '#0047AB'
+                              when 'MEI' then '#ea580c'
+                              when 'ATA' then '#dc2626'
+                              else '#6b7280'
+                              end
+            %>
+            <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg mb-2 hover:border-green-300 hover:shadow-md transition-all" style="background-color: #f0fdf4; border-color: #22c55e;">
+              <div class="flex items-center gap-3">
+                <span class="px-2 py-1 rounded text-white text-xs font-semibold" style="background-color: <%= position_color %>;">
+                  <%= position_text %>
+                </span>
+                <span class="font-medium"><%= player.name %></span>
+                <span class="text-sm text-gray-600">🇧🇷 Brasil</span>
+              </div>
+              <div class="text-sm text-gray-600">
+                <span>F:<%= player.strength %> E:<%= player.stamina %> V:<%= player.speed %> A:<%= player.attack %> D:<%= player.defense %> P:<%= player.passing %></span>
+                <span class="font-semibold ml-4"><%= player.overall %>⭐</span>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Reservas -->
+        <h4 class="text-sm font-semibold text-gray-600 mb-4" style="text-transform: uppercase; letter-spacing: 0.05em;">Reservas</h4>
+
+        <div class="mb-6">
+          <% reserves = @players.offset(5).limit(3) %>
+          <% reserves.each do |player| %>
+            <%
+              position_text = case player.position
+                             when 'GK' then 'GOL'
+                             when 'CB' then 'ZAG'
+                             when 'LB', 'RB' then 'LAT'
+                             when 'CDM', 'CM', 'CAM' then 'MEI'
+                             when 'LW', 'RW', 'ST' then 'ATA'
+                             else player.position
+                             end
+
+              position_color = case position_text
+                              when 'GOL' then '#228B22'
+                              when 'ZAG', 'LAT' then '#0047AB'
+                              when 'MEI' then '#ea580c'
+                              when 'ATA' then '#dc2626'
+                              else '#6b7280'
+                              end
+            %>
+            <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg mb-2 hover:border-green-300 hover:shadow-md transition-all">
+              <div class="flex items-center gap-3">
+                <span class="px-2 py-1 rounded text-white text-xs font-semibold" style="background-color: <%= position_color %>;">
+                  <%= position_text %>
+                </span>
+                <span class="font-medium"><%= player.name %></span>
+                <span class="text-sm text-gray-600">🇧🇷 Brasil</span>
+              </div>
+              <div class="text-sm text-gray-600">
+                <span>F:<%= player.strength %> E:<%= player.stamina %> V:<%= player.speed %> A:<%= player.attack %> D:<%= player.defense %> P:<%= player.passing %></span>
+                <span class="font-semibold ml-4"><%= player.overall %>⭐</span>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-4 mt-6">
+          <button class="flex-1 px-6 py-3 text-white rounded-lg font-medium hover:opacity-90 transition-all" style="background-color: #0047AB;">Ver Transferências</button>
+          <button class="flex-1 px-6 py-3 text-white rounded-lg font-medium hover:opacity-90 transition-all" style="background-color: #228B22;">Histórico</button>
+          <button class="px-4 py-3 rounded-lg font-medium" style="background-color: #f3f4f6; color: #374151;">Stats</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

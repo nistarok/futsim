@@ -20,6 +20,13 @@ class ApplicationController < ActionController::Base
     redirect_to root_path, alert: 'Please sign in to access this page.' unless user_signed_in?
   end
 
+  def authenticate_admin!
+    unless user_signed_in? && current_user.admin?
+      # Don't reveal the existence of admin routes to regular users
+      raise ActionController::RoutingError.new('Not Found')
+    end
+  end
+
   def set_locale
     I18n.locale = params[:locale] || session[:locale] || I18n.default_locale
     session[:locale] = I18n.locale
