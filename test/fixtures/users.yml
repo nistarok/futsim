@@ -1,0 +1,16 @@
+# Test fixtures for User model
+admin:
+  id: 1
+  email: "admin@futsim.com"
+  name: "Admin User"
+  google_id: "123456789"
+  created_at: <%= 1.month.ago %>
+  updated_at: <%= 1.week.ago %>
+
+test_user:
+  id: 2
+  email: "test@futsim.com"
+  name: "Test User"
+  google_id: "987654321"
+  created_at: <%= 1.month.ago %>
+  updated_at: <%= 1.week.ago %>

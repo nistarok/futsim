@@ -16,6 +16,54 @@ pt-BR:
     yes: "Sim"
     no: "Não"
 
+  # Rounds
+  rounds:
+    created_successfully: "Rodada criada com sucesso!"
+    creation_failed: "Erro ao criar rodada."
+    approved_successfully: "Escalação aprovada com sucesso!"
+    approval_failed: "Erro ao aprovar escalação."
+    already_approved: "Você já aprovou esta rodada."
+    not_ready_for_simulation: "A rodada ainda não está pronta para simulação."
+    simulation_completed: "Simulação concluída com sucesso!"
+    simulation_started: "Simulação iniciada! Acompanhe os resultados."
+    simulation_failed: "Erro na simulação. Tentaremos novamente automaticamente."
+    simulation_paused: "Simulação pausada para decisão tática."
+    simulation_resumed: "Simulação retomada."
+
+  # Simulation
+  simulation:
+    status:
+      pending: "Aguardando início"
+      running: "Simulando"
+      halftime_break: "Intervalo"
+      paused_red_card: "Pausada - Expulsão"
+      paused_injury: "Pausada - Lesão"
+      paused_penalty: "Pausada - Pênalti"
+      completed: "Concluída"
+      failed: "Falhou"
+
+    events:
+      goal: "Gol!"
+      yellow_card: "Cartão amarelo"
+      red_card: "Cartão vermelho"
+      injury: "Lesão"
+      penalty: "Pênalti"
+      substitution: "Substituição"
+      halftime: "Fim do primeiro tempo"
+      fulltime: "Fim de jogo"
+
+    decisions:
+      choose_penalty_taker: "Escolha o batedor do pênalti"
+      make_substitution: "Faça uma substituição"
+      reorganize_formation: "Reorganize a formação"
+      halftime_changes: "Mudanças no intervalo"
+      time_limit: "Tempo limite: %{minutes} minutos"
+
+    ai_decisions:
+      penalty_taken: "%{player} bateu o pênalti"
+      substitution_made: "%{out_player} saiu, %{in_player} entrou"
+      formation_changed: "Formação alterada para %{formation}"
+
   # Navigation
   nav:
     home: "Início"

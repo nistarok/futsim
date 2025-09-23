@@ -1,0 +1,196 @@
+# Test fixtures for Player model
+fluminense_gk1:
+  id: 1
+  club: fluminense
+  name: "Fábio Silva"
+  position: "GK"
+  overall: 82
+  age: 28
+  nationality: "BR"
+  market_value: 500000
+  salary: 25000
+  goalkeeping: 85
+  reflexes: 83
+  handling: 80
+  created_at: <%= 1.month.ago %>
+
+fluminense_cb1:
+  id: 2
+  club: fluminense
+  name: "André Lima"
+  position: "CB"
+  overall: 79
+  age: 26
+  nationality: "BR"
+  market_value: 400000
+  salary: 20000
+  defense: 82
+  strength: 78
+  heading: 80
+  created_at: <%= 1.month.ago %>
+
+fluminense_cb2:
+  id: 3
+  club: fluminense
+  name: "Carlos Santos"
+  position: "CB"
+  overall: 77
+  age: 24
+  nationality: "BR"
+  market_value: 350000
+  salary: 18000
+  defense: 79
+  strength: 75
+  heading: 78
+  created_at: <%= 1.month.ago %>
+
+fluminense_lb1:
+  id: 4
+  club: fluminense
+  name: "Rafael Costa"
+  position: "LB"
+  overall: 75
+  age: 23
+  nationality: "BR"
+  market_value: 300000
+  salary: 15000
+  defense: 74
+  pace: 78
+  crossing: 72
+  created_at: <%= 1.month.ago %>
+
+fluminense_rb1:
+  id: 5
+  club: fluminense
+  name: "Bruno Oliveira"
+  position: "RB"
+  overall: 76
+  age: 25
+  nationality: "BR"
+  market_value: 320000
+  salary: 16000
+  defense: 75
+  pace: 79
+  crossing: 73
+  created_at: <%= 1.month.ago %>
+
+fluminense_cdm1:
+  id: 6
+  club: fluminense
+  name: "Lucas Ferreira"
+  position: "CDM"
+  overall: 78
+  age: 27
+  nationality: "BR"
+  market_value: 450000
+  salary: 22000
+  defense: 76
+  passing: 80
+  tackling: 78
+  created_at: <%= 1.month.ago %>
+
+fluminense_cdm2:
+  id: 7
+  club: fluminense
+  name: "Diego Rocha"
+  position: "CDM"
+  overall: 74
+  age: 24
+  nationality: "BR"
+  market_value: 330000
+  salary: 17000
+  defense: 73
+  passing: 76
+  tackling: 75
+  created_at: <%= 1.month.ago %>
+
+fluminense_cm1:
+  id: 8
+  club: fluminense
+  name: "João Pedro"
+  position: "CM"
+  overall: 77
+  age: 25
+  nationality: "BR"
+  market_value: 380000
+  salary: 19000
+  passing: 79
+  stamina: 78
+  attack: 74
+  created_at: <%= 1.month.ago %>
+
+fluminense_cm2:
+  id: 9
+  club: fluminense
+  name: "Gabriel Mendes"
+  position: "CM"
+  overall: 75
+  age: 22
+  nationality: "BR"
+  market_value: 250000
+  salary: 12000
+  passing: 76
+  stamina: 77
+  attack: 72
+  created_at: <%= 1.month.ago %>
+
+fluminense_st1:
+  id: 10
+  club: fluminense
+  name: "Pedro Alves"
+  position: "ST"
+  overall: 80
+  age: 26
+  nationality: "BR"
+  market_value: 600000
+  salary: 30000
+  attack: 83
+  finishing: 82
+  pace: 78
+  created_at: <%= 1.month.ago %>
+
+fluminense_st2:
+  id: 11
+  club: fluminense
+  name: "Mateus Gomes"
+  position: "ST"
+  overall: 76
+  age: 23
+  nationality: "BR"
+  market_value: 280000
+  salary: 14000
+  attack: 79
+  finishing: 77
+  pace: 75
+  created_at: <%= 1.month.ago %>
+
+# Santos players for comparison tests
+santos_gk1:
+  id: 12
+  club: santos
+  name: "Ricardo Silva"
+  position: "GK"
+  overall: 79
+  age: 29
+  nationality: "BR"
+  market_value: 480000
+  salary: 24000
+  goalkeeping: 82
+  reflexes: 80
+  handling: 78
+  created_at: <%= 1.month.ago %>
+
+santos_cb1:
+  id: 13
+  club: santos
+  name: "Felipe Santos"
+  position: "CB"
+  overall: 78
+  age: 27
+  nationality: "BR"
+  market_value: 420000
+  salary: 21000
+  defense: 80
+  strength: 76
+  heading: 79
+  created_at: <%= 1.month.ago %>

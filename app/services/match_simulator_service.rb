@@ -39,7 +39,45 @@ class MatchSimulatorService
   def calculate_team_strength(club, is_home: false)
     return { attack: 40, midfield: 40, defense: 40 } if club.players.empty?
 
-    # Calcular força por setor (estilo Elifoot 98)
+    # Obter escalação ativa do clube
+    lineup = club.lineups.active.first
+
+    # Fallback para sistema antigo se não houver escalação
+    return calculate_legacy_team_strength(club, is_home: is_home) unless lineup&.starting_players&.any?
+
+    # Calcular força por setor baseada na formação tática
+    attack_strength = calculate_attack_strength_from_lineup(lineup)
+    midfield_strength = calculate_midfield_strength_from_lineup(lineup)
+    defense_strength = calculate_defense_strength_from_lineup(lineup)
+
+    # Aplicar modificadores da formação tática
+    formation_modifiers = calculate_formation_modifiers(lineup.formation)
+    attack_strength *= formation_modifiers[:attack]
+    midfield_strength *= formation_modifiers[:midfield]
+    defense_strength *= formation_modifiers[:defense]
+
+    # Vantagem de casa (+3 pontos em cada setor)
+    if is_home
+      attack_strength += 3
+      midfield_strength += 3
+      defense_strength += 3
+    end
+
+    # Fator sorte/moral aleatório (-2 a +2)
+    luck = rand(-2.0..2.0).round(1)
+    attack_strength += luck
+    midfield_strength += luck
+    defense_strength += luck
+
+    {
+      attack: [attack_strength, 30].max,
+      midfield: [midfield_strength, 30].max,
+      defense: [defense_strength, 30].max
+    }
+  end
+
+  # Sistema legado (fallback) - mantém compatibilidade
+  def calculate_legacy_team_strength(club, is_home: false)
     attack_strength = calculate_attack_strength(club)
     midfield_strength = calculate_midfield_strength(club)
     defense_strength = calculate_defense_strength(club)
@@ -62,6 +100,111 @@ class MatchSimulatorService
       midfield: [midfield_strength, 30].max,
       defense: [defense_strength, 30].max
     }
+  end
+
+  # Novos métodos baseados em escalação tática
+  def calculate_attack_strength_from_lineup(lineup)
+    attack_positions = get_attack_positions_for_formation(lineup.formation)
+    attackers = lineup.starting_players.joins(:player)
+                     .where(players: { position: attack_positions })
+                     .includes(:player)
+
+    return 45 if attackers.empty?
+
+    # Calcular força baseada nos jogadores realmente escalados
+    players = attackers.map(&:player)
+
+    avg_attack = players.sum(&:attack) / players.size.to_f
+    avg_speed = players.sum(&:speed) / players.size.to_f
+    avg_strength = players.sum(&:strength) / players.size.to_f
+    avg_stamina = players.sum(&:stamina) / players.size.to_f
+
+    attack_strength = (
+      (avg_attack * 0.50) +      # 50% - finalização
+      (avg_speed * 0.30) +       # 30% - velocidade para escapar da defesa
+      (avg_strength * 0.15) +    # 15% - força para disputas
+      (avg_stamina * 0.05)       # 5% - resistência
+    ).round(1)
+
+    attack_strength
+  end
+
+  def calculate_midfield_strength_from_lineup(lineup)
+    midfield_positions = get_midfield_positions_for_formation(lineup.formation)
+    midfielders = lineup.starting_players.joins(:player)
+                       .where(players: { position: midfield_positions })
+                       .includes(:player)
+
+    return 45 if midfielders.empty?
+
+    # Calcular força baseada nos jogadores realmente escalados
+    players = midfielders.map(&:player)
+
+    avg_passing = players.sum(&:passing) / players.size.to_f
+    avg_stamina = players.sum(&:stamina) / players.size.to_f
+    avg_attack = players.sum(&:attack) / players.size.to_f
+    avg_defense = players.sum(&:defense) / players.size.to_f
+
+    midfield_strength = (
+      (avg_passing * 0.40) +     # 40% - qualidade dos passes
+      (avg_stamina * 0.30) +     # 30% - resistência para dominar o jogo
+      (avg_defense * 0.15) +     # 15% - marcação no meio
+      (avg_attack * 0.15)        # 15% - criação de jogadas
+    ).round(1)
+
+    midfield_strength
+  end
+
+  def calculate_defense_strength_from_lineup(lineup)
+    defense_positions = get_defense_positions_for_formation(lineup.formation)
+
+    # Goleiro
+    goalkeeper = lineup.starting_players.joins(:player)
+                      .where(players: { position: 'GK' })
+                      .includes(:player)
+                      .first&.player
+
+    # Defensores
+    defenders = lineup.starting_players.joins(:player)
+                     .where(players: { position: defense_positions })
+                     .includes(:player)
+                     .map(&:player)
+
+    return 45 if !goalkeeper && defenders.empty?
+
+    # Força do goleiro (peso maior)
+    gk_strength = if goalkeeper
+      gk_defense = goalkeeper.defense || 50
+      gk_strength_attr = goalkeeper.strength || 50
+      (gk_defense * 0.70) + (gk_strength_attr * 0.30) # Goleiro = 70% defense, 30% strength
+    else
+      40 # Goleiro fraco se não tiver
+    end
+
+    # Força da linha defensiva
+    def_strength = if defenders.any?
+      avg_defense = defenders.sum(&:defense) / defenders.size.to_f
+      avg_strength = defenders.sum(&:strength) / defenders.size.to_f
+      avg_speed = defenders.sum(&:speed) / defenders.size.to_f
+
+      (avg_defense * 0.50) + (avg_strength * 0.30) + (avg_speed * 0.20)
+    else
+      40 # Defesa fraca se não tiver defensores
+    end
+
+    # Ajustar peso do goleiro vs linha baseado no número de defensores
+    gk_weight = case defenders.size
+    when 3 then 0.45  # 3 defensores = goleiro mais importante
+    when 4 then 0.40  # 4 defensores = peso padrão
+    when 5 then 0.35  # 5 defensores = goleiro menos importante
+    else 0.40
+    end
+
+    line_weight = 1.0 - gk_weight
+
+    # Combinar goleiro + linha defensiva
+    defense_strength = (gk_strength * gk_weight) + (def_strength * line_weight)
+    defense_strength.round(1)
   end
 
   def calculate_attack_strength(club)
@@ -292,5 +435,65 @@ class MatchSimulatorService
     ]
 
     descriptions.sample
+  end
+
+  # Mapeamento de posições por formação (baseado em formation_positions do modelo Lineup)
+  def get_attack_positions_for_formation(formation)
+    case formation
+    when '4-4-2' then ['ST']                    # 2 ST
+    when '4-3-3' then ['LW', 'ST', 'RW']       # LW, ST, RW
+    when '3-5-2' then ['ST']                    # 2 ST
+    when '4-5-1' then ['ST']                    # 1 ST
+    when '3-4-3' then ['LW', 'ST', 'RW']       # LW, ST, RW
+    when '5-3-2' then ['ST']                    # 2 ST
+    when '4-2-3-1' then ['ST']                  # 1 ST
+    else ['LW', 'RW', 'ST']                     # Fallback
+    end
+  end
+
+  def get_midfield_positions_for_formation(formation)
+    case formation
+    when '4-4-2' then ['LM', 'CM', 'RM']                       # LM, CM, CM, RM
+    when '4-3-3' then ['CDM', 'CM', 'CAM']                     # CDM, CM, CAM
+    when '3-5-2' then ['LM', 'CDM', 'CM', 'CAM', 'RM']        # LM, CDM, CM, CAM, RM
+    when '4-5-1' then ['LM', 'CDM', 'CM', 'CAM', 'RM']        # LM, CDM, CM, CAM, RM
+    when '3-4-3' then ['LM', 'CM', 'RM']                       # LM, CM, CM, RM
+    when '5-3-2' then ['CDM', 'CM', 'CAM']                     # CDM, CM, CAM
+    when '4-2-3-1' then ['CDM', 'CAM']                         # CDM, CDM, CAM, CAM, CAM
+    else ['CDM', 'CM', 'CAM', 'LM', 'RM']                      # Fallback
+    end
+  end
+
+  def get_defense_positions_for_formation(formation)
+    case formation
+    when '4-4-2' then ['LB', 'CB', 'RB']       # LB, CB, CB, RB
+    when '4-3-3' then ['LB', 'CB', 'RB']       # LB, CB, CB, RB
+    when '3-5-2' then ['CB']                    # CB, CB, CB
+    when '4-5-1' then ['LB', 'CB', 'RB']       # LB, CB, CB, RB
+    when '3-4-3' then ['CB']                    # CB, CB, CB
+    when '5-3-2' then ['LB', 'CB', 'RB']       # LB, CB, CB, CB, RB
+    when '4-2-3-1' then ['LB', 'CB', 'RB']     # LB, CB, CB, RB
+    else ['CB', 'LB', 'RB']                     # Fallback
+    end
+  end
+
+  # Modificadores táticos por formação
+  def calculate_formation_modifiers(formation)
+    case formation
+    when '4-4-2'
+      { defense: 1.00, midfield: 1.00, attack: 1.00 }  # Equilibrada
+    when '4-3-3'
+      { defense: 1.00, midfield: 0.85, attack: 1.15 }  # Ofensiva
+    when '5-3-2'
+      { defense: 1.37, midfield: 0.85, attack: 1.00 }  # Defensiva
+    when '4-5-1'
+      { defense: 1.00, midfield: 1.10, attack: 0.70 }  # Meio-campo dominante
+    when '3-4-3'
+      { defense: 0.95, midfield: 1.00, attack: 1.15 }  # Ultra-ofensiva
+    when '4-2-3-1'
+      { defense: 1.08, midfield: 1.15, attack: 0.91 }  # Híbrida (CAMs compensam atacante isolado)
+    else
+      { defense: 1.00, midfield: 1.00, attack: 1.00 }  # Fallback padrão
+    end
   end
 end

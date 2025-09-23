@@ -100,8 +100,15 @@ class PlayerPoolGeneratorService
     return if @room.clubs.any? # Não gerar se já existem clubes
 
     ActiveRecord::Base.transaction do
-      # Pegar 16 clubes das salas template (identificadas pela descrição)
+      # Verificar se existem template rooms, se não existirem, executar seeds
       template_rooms = Room.where("description LIKE ?", "Template room for%")
+
+      if template_rooms.empty?
+        Rails.logger.info "No template rooms found. Running database seeds..."
+        Rails.application.load_seed
+        template_rooms = Room.where("description LIKE ?", "Template room for%")
+      end
+
       available_clubs = Club.where(room: template_rooms, available: true)
                            .includes(:division, :players)
                            .limit(16)

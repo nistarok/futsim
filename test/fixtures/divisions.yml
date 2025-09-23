@@ -1,0 +1,16 @@
+# Test fixtures for Division model
+serie_a:
+  id: 1
+  name: "Série A"
+  level: 1
+  description: "Primeira divisão do futebol brasileiro"
+  created_at: <%= 1.month.ago %>
+  updated_at: <%= 1.week.ago %>
+
+serie_b:
+  id: 2
+  name: "Série B"
+  level: 2
+  description: "Segunda divisão do futebol brasileiro"
+  created_at: <%= 1.month.ago %>
+  updated_at: <%= 1.week.ago %>

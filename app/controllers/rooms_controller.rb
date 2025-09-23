@@ -92,9 +92,25 @@ class RoomsController < ApplicationController
     # Atualizar status da sala para ativa
     @room.update!(status: 'active')
 
-    # Criar primeira rodada se não existir
-    if @room.rounds.empty?
-      @room.create_next_round!
+    # Gerar temporada completa se necessário
+    if @room.season_pending?
+      # Marcar como gerando para evitar duplicação
+      @room.update!(season_status: 'generating')
+
+      # Executar job em background
+      GenerateSeasonJob.perform_later(@room.id)
+
+      redirect_to @room, notice: t('notices.season_generation_started')
+      return
+    elsif @room.season_generating?
+      redirect_to @room, notice: t('notices.season_generation_in_progress')
+      return
+    elsif @room.season_failed?
+      redirect_to @room, alert: t('alerts.season_generation_failed')
+      return
+    elsif !@room.can_start_game?
+      redirect_to @room, alert: t('alerts.season_not_ready')
+      return
     end
 
     redirect_to club_path(user_club), notice: t('notices.game_started')

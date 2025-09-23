@@ -9,6 +9,7 @@ class Room < ApplicationRecord
   validates :max_players, presence: true, numericality: { greater_than: 0, less_than_or_equal_to: 16 }
   validates :current_players, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :status, presence: true, inclusion: { in: ['waiting', 'active', 'finished'] }
+  validates :season_status, inclusion: { in: ['pending', 'generating', 'ready', 'failed'] }
 
   # Custom validation for max singleplayer rooms per user
   validate :limit_singleplayer_rooms_per_user, if: -> { is_multiplayer == false }
@@ -58,6 +59,27 @@ class Room < ApplicationRecord
 
   def active_users_count
     clubs.joins(:user).distinct.count(:user_id)
+  end
+
+  # Métodos para status de temporada
+  def season_pending?
+    season_status == 'pending'
+  end
+
+  def season_generating?
+    season_status == 'generating'
+  end
+
+  def season_ready?
+    season_status == 'ready'
+  end
+
+  def season_failed?
+    season_status == 'failed'
+  end
+
+  def can_start_game?
+    season_ready? && rounds.any?
   end
 
   private

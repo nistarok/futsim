@@ -16,6 +16,27 @@
           </div>
         </div>
         <div style="display: flex; gap: 0.75rem;">
+          <!-- Botão para acessar rodadas -->
+          <% current_round = @room.rounds.current.first %>
+          <% if current_round %>
+            <%= link_to "#{calendar_icon} Rodada Atual".html_safe, room_round_path(@room, current_round),
+                style: "background-color: #0047AB; color: white; border: none; text-decoration: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 500; display: inline-block; transition: all 0.2s;" %>
+          <% elsif @room.season_ready? %>
+            <%= link_to "#{rocket_icon} Iniciar Jogo".html_safe, start_game_room_path(@room), method: :post,
+                style: "background-color: #0047AB; color: white; border: none; text-decoration: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 500; display: inline-block; transition: all 0.2s;" %>
+          <% elsif @room.season_generating? %>
+            <button disabled style="background-color: #ea580c; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 500; cursor: not-allowed;">
+              <%= lightbulb_icon %> Gerando Temporada...
+            </button>
+          <% elsif @room.season_failed? %>
+            <button disabled style="background-color: #dc2626; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 500; cursor: not-allowed;">
+              <%= target_icon %> Erro na Geração
+            </button>
+          <% elsif @room.clubs.joins(:user).distinct.count(:user_id) >= 2 %>
+            <%= link_to "#{rocket_icon} Gerar Temporada".html_safe, start_game_room_path(@room), method: :post,
+                style: "background-color: #228B22; color: white; border: none; text-decoration: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 500; display: inline-block; transition: all 0.2s;" %>
+          <% end %>
+
           <% if @clubs.any? && @clubs.available.any? %>
             <%= button_to "#{dice_icon} Sorteio Aleatório".html_safe, choose_random_club_room_path(@room), method: :patch,
                 data: { confirm: t('rooms.random_selection_confirm') },

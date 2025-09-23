@@ -6,6 +6,13 @@ Rails.application.routes.draw do
       patch :start_game
     end
     resources :clubs, only: [:new, :create]
+    resources :rounds do
+      member do
+        patch :approve
+        post :simulate
+        get :simulation_results
+      end
+    end
   end
   resources :clubs do
     member do

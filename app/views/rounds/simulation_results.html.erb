@@ -1,0 +1,246 @@
+<div class="min-h-screen bg-gray-50">
+  <div class="max-w-6xl mx-auto px-6 py-8">
+    <!-- Header com ícone circular e informações -->
+    <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <%= link_to room_round_path(@room, @round), class: "text-gray-600 hover:text-gray-800 font-medium mb-3 inline-block" do %>
+            <%= arrow_left_icon(size: '1rem', class: 'mr-1') %> Voltar à Rodada
+          <% end %>
+          <div class="flex items-center gap-4 mb-2">
+            <div class="w-16 h-16 rounded-full bg-gradient-to-r from-green-500 to-green-600 flex items-center justify-center">
+              <%= trophy_icon(size: '2rem', class: 'text-white') %>
+            </div>
+            <div>
+              <h1 class="text-3xl font-bold text-gray-900">Resultados da <%= @round.display_name %></h1>
+              <p class="text-lg text-gray-600"><%= @room.name %></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status finalizado -->
+        <div class="text-right">
+          <div class="text-sm text-gray-600 mb-1">Status</div>
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+            <%= save_icon(size: '1rem', class: 'mr-1') %> Simulação Concluída
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cards de estatísticas dos resultados -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div class="bg-white rounded-lg shadow-sm p-6 text-center">
+        <h3 class="text-3xl font-bold text-gray-900 mb-1"><%= @simulation_results.count %></h3>
+        <p class="text-sm text-gray-600 font-medium">Partidas Simuladas</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm p-6 text-center">
+        <h3 class="text-3xl font-bold text-blue-600 mb-1">
+          <%= @simulation_results.sum { |result| (result[:match]&.home_score || 0) + (result[:match]&.away_score || 0) } %>
+        </h3>
+        <p class="text-sm text-gray-600 font-medium">Total de Gols</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm p-6 text-center">
+        <h3 class="text-3xl font-bold text-orange-600 mb-1">
+          <%= @simulation_results.count { |result| result[:match]&.home_score == result[:match]&.away_score } %>
+        </h3>
+        <p class="text-sm text-gray-600 font-medium">Empates</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm p-6 text-center">
+        <h3 class="text-3xl font-bold text-green-600 mb-1">
+          <%= Time.current.strftime("%H:%M") %>
+        </h3>
+        <p class="text-sm text-gray-600 font-medium">Hora da Simulação</p>
+      </div>
+    </div>
+
+    <!-- Resultados das Partidas -->
+    <div class="space-y-6">
+      <% @simulation_results.each_with_index do |simulation_result, index| %>
+        <% match = simulation_result[:match] %>
+        <% next if match.nil? %>
+        <% events = simulation_result[:events] || [] %>
+
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+          <!-- Header do Resultado -->
+          <div class="bg-gray-50 px-6 py-4 border-b">
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                <%= football_icon(size: '1.25rem') %>
+                Partida <%= index + 1 %>
+              </h3>
+              <div class="text-sm text-gray-500">
+                <%= match.match_date.strftime("%d/%m/%Y") %>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-6">
+            <!-- Placar Principal -->
+            <div class="flex items-center justify-between mb-6">
+              <!-- Time da Casa -->
+              <div class="flex items-center flex-1">
+                <div class="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold"
+                     style="background: linear-gradient(135deg, <%= match.home_club.primary_color || '#0047AB' %>, <%= match.home_club.secondary_color || '#228B22' %>);">
+                  <%= match.home_club.name[0..2].upcase %>
+                </div>
+                <div class="ml-4">
+                  <p class="text-xl font-semibold text-gray-900"><%= match.home_club.name %></p>
+                  <p class="text-sm text-gray-600">
+                    <% if match.home_club.user %>
+                      <%= users_icon(size: '0.875rem', class: 'inline') %> <%= match.home_club.user.name %>
+                    <% else %>
+                      CPU
+                    <% end %>
+                  </p>
+                </div>
+              </div>
+
+              <!-- Placar -->
+              <div class="px-8 text-center">
+                <div class="text-4xl font-bold text-gray-900 mb-1">
+                  <%= match.home_score %> × <%= match.away_score %>
+                </div>
+                <% if match.home_win? %>
+                  <span class="text-sm font-medium text-green-600">Vitória Mandante</span>
+                <% elsif match.away_win? %>
+                  <span class="text-sm font-medium text-blue-600">Vitória Visitante</span>
+                <% else %>
+                  <span class="text-sm font-medium text-gray-600">Empate</span>
+                <% end %>
+              </div>
+
+              <!-- Time Visitante -->
+              <div class="flex items-center flex-1 justify-end">
+                <div class="mr-4 text-right">
+                  <p class="text-xl font-semibold text-gray-900"><%= match.away_club.name %></p>
+                  <p class="text-sm text-gray-600">
+                    <% if match.away_club.user %>
+                      <%= users_icon(size: '0.875rem', class: 'inline') %> <%= match.away_club.user.name %>
+                    <% else %>
+                      CPU
+                    <% end %>
+                  </p>
+                </div>
+                <div class="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold"
+                     style="background: linear-gradient(135deg, <%= match.away_club.primary_color || '#0047AB' %>, <%= match.away_club.secondary_color || '#228B22' %>);">
+                  <%= match.away_club.name[0..2].upcase %>
+                </div>
+              </div>
+            </div>
+
+            <!-- Eventos da Partida -->
+            <% if events.any? %>
+              <div class="border-t pt-6">
+                <h4 class="text-sm font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <%= chart_icon(size: '1rem') %> Eventos da Partida
+                </h4>
+
+                <div class="space-y-3">
+                  <% events.sort_by { |event| event[:minute] }.each do |event| %>
+                    <div class="flex items-center gap-3 text-sm">
+                      <!-- Minuto -->
+                      <div class="w-8 text-center text-gray-500 font-mono">
+                        <%= event[:minute] %>'
+                      </div>
+
+                      <!-- Tipo do evento -->
+                      <div class="w-6 text-center">
+                        <% if event[:type] == 'goal' %>
+                          <%= football_icon(size: '1rem', class: 'text-green-600') %>
+                        <% else %>
+                          <%= target_icon(size: '1rem', class: 'text-orange-500') %>
+                        <% end %>
+                      </div>
+
+                      <!-- Descrição -->
+                      <div class="flex-1">
+                        <% if event[:type] == 'goal' %>
+                          <span class="font-semibold text-green-700">GOL!</span>
+                          <span class="text-gray-700"><%= event[:description] %></span>
+                        <% else %>
+                          <span class="text-gray-700"><%= event[:description] %></span>
+                        <% end %>
+                      </div>
+
+                      <!-- Time que fez o evento -->
+                      <div class="w-24 text-right text-gray-600">
+                        <% if event[:team] == :home %>
+                          <%= match.home_club.name[0..3] %>
+                        <% else %>
+                          <%= match.away_club.name[0..3] %>
+                        <% end %>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+
+            <!-- Destaque para jogos do usuário -->
+            <% user_club = @room.clubs.find_by(user: current_user) %>
+            <% if user_club && (match.home_club == user_club || match.away_club == user_club) %>
+              <div class="mt-6 pt-4 border-t">
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div class="flex items-center">
+                    <%= target_icon(size: '1.25rem', class: 'text-blue-600 mr-3') %>
+                    <div>
+                      <p class="font-semibold text-blue-900">Seu Resultado</p>
+                      <p class="text-sm text-blue-700">
+                        <% if match.home_club == user_club %>
+                          <% if match.home_win? %>
+                            <%= trophy_icon(size: '1rem', class: 'inline text-green-600') %> Vitória em casa! (+3 pontos)
+                          <% elsif match.draw? %>
+                            Empate em casa (+1 ponto)
+                          <% else %>
+                            Derrota em casa (0 pontos)
+                          <% end %>
+                        <% else %>
+                          <% if match.away_win? %>
+                            <%= trophy_icon(size: '1rem', class: 'inline text-green-600') %> Vitória fora de casa! (+3 pontos)
+                          <% elsif match.draw? %>
+                            Empate fora de casa (+1 ponto)
+                          <% else %>
+                            Derrota fora de casa (0 pontos)
+                          <% end %>
+                        <% end %>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Ações após simulação -->
+    <div class="bg-white rounded-lg shadow-sm p-6 mt-6">
+      <div class="text-center">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Próximos Passos</h3>
+
+        <div class="flex justify-center gap-4">
+          <%= link_to room_round_path(@room, @round),
+              class: "inline-flex items-center px-6 py-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50" do %>
+            <%= arrow_left_icon(size: '1rem', class: 'mr-2') %>
+            Voltar à Rodada
+          <% end %>
+
+          <%= link_to "#",
+              class: "inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700" do %>
+            <%= chart_icon(size: '1rem', class: 'mr-2') %>
+            Ver Classificação
+          <% end %>
+
+          <%= link_to room_rounds_path(@room),
+              method: :post,
+              class: "inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700" do %>
+            <%= plus_icon(size: '1rem', class: 'mr-2') %>
+            Próxima Rodada
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

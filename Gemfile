@@ -29,6 +29,9 @@ gem "omniauth-google-oauth2"
 # Environment variables
 gem "dotenv-rails", groups: [:development, :test]
 
+# Advisory locks for preventing race conditions
+gem "with_advisory_lock"
+
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
 
@@ -58,9 +61,16 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
-  
+
   # For better development experience with Docker
   gem "listen", "~> 3.9"
+
+  # Testing gems
+  gem "rspec-rails"
+  gem "capybara"
+  gem "selenium-webdriver"
+  gem "factory_bot_rails"
+  gem "faker"
 end
 
 group :development do

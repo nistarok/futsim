@@ -108,8 +108,13 @@ class ClubsController < ApplicationController
     # Find or create lineup
     @lineup = @club.lineups.find_or_create_by(active: true) do |lineup|
       lineup.name = "Escalação Principal"
-      lineup.formation = "4-4-2"
+      lineup.formation = params[:lineup][:formation] || "4-4-2"
       lineup.match_date = Date.current
+    end
+
+    # Update formation if it changed
+    if @lineup.persisted? && params[:lineup][:formation].present?
+      @lineup.update(formation: params[:lineup][:formation])
     end
 
     # Clear existing lineup players

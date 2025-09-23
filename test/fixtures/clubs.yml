@@ -1,0 +1,36 @@
+# Test fixtures for Club model
+fluminense:
+  id: 1
+  name: "Fluminense"
+  city: "Rio de Janeiro"
+  founded_year: 1902
+  stadium_name: "Maracanã"
+  stadium_capacity: 78838
+  budget: 50000000
+  division_id: 1
+  created_at: <%= 1.month.ago %>
+  updated_at: <%= 1.week.ago %>
+
+santos:
+  id: 2
+  name: "Santos"
+  city: "Santos"
+  founded_year: 1912
+  stadium_name: "Vila Belmiro"
+  stadium_capacity: 16068
+  budget: 35000000
+  division_id: 1
+  created_at: <%= 1.month.ago %>
+  updated_at: <%= 1.week.ago %>
+
+test_club:
+  id: 3
+  name: "Test Club"
+  city: "Test City"
+  founded_year: 1950
+  stadium_name: "Test Stadium"
+  stadium_capacity: 20000
+  budget: 10000000
+  division_id: 2
+  created_at: <%= 1.month.ago %>
+  updated_at: <%= 1.week.ago %>
